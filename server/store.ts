@@ -1,5 +1,6 @@
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import type { PublicRoom, Role, Room } from "../shared/types";
 import { DEFAULT_SETTINGS, IDLE_PLAYBACK } from "../shared/types";
@@ -21,8 +22,7 @@ export class RoomStore {
   private onExpire: (roomId: string) => void = () => {};
 
   constructor(dataDir = process.env.DATA_DIR ?? path.join(process.cwd(), "data")) {
-    mkdirSync(dataDir, { recursive: true });
-    this.db = new DatabaseSync(path.join(dataDir, "rooms.db"));
+    this.db = this.openDatabase(dataDir);
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS rooms (
         id TEXT PRIMARY KEY,
@@ -33,6 +33,22 @@ export class RoomStore {
     this.load();
     setInterval(() => this.snapshot(), SNAPSHOT_INTERVAL_MS).unref();
     setInterval(() => this.expire(), EXPIRY_CHECK_MS).unref();
+  }
+
+  /**
+   * 지정한 경로에 DB를 열고, 권한 문제 등으로 실패하면 임시 디렉터리로 물러난다.
+   * 볼륨 마운트가 잘못돼도 서비스가 통째로 죽는 것보다는 스냅샷 없이라도 도는 게 낫다.
+   */
+  private openDatabase(dataDir: string): DatabaseSync {
+    try {
+      mkdirSync(dataDir, { recursive: true });
+      return new DatabaseSync(path.join(dataDir, "rooms.db"));
+    } catch (err) {
+      const fallback = path.join(tmpdir(), "mabu-data");
+      console.error(`[store] cannot open ${dataDir} (${(err as Error).message}); falling back to ${fallback}. Rooms will NOT survive a restart.`);
+      mkdirSync(fallback, { recursive: true });
+      return new DatabaseSync(path.join(fallback, "rooms.db"));
+    }
   }
 
   setExpiryHandler(fn: (roomId: string) => void) {
