@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BrandMark } from "@/components/BrandMark";
+import TextThree from "@/components/ui/text-three";
 import { GuideDialog } from "@/components/GuideDialog";
 
 export default function Home() {
@@ -33,8 +33,8 @@ export default function Home() {
     <main className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1>
-            <BrandMark size="lg" />
+          <h1 className="flex min-h-[1.2em] items-center justify-center text-4xl sm:text-6xl">
+            <TextThree text="마무리 부탁드립니다!" speed={90} />
           </h1>
           <p className="mt-2 text-base font-medium text-subtext">발표자 타이머 컨트롤러</p>
           <p className="mt-4 text-sm leading-relaxed text-muted">
