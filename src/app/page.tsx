@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BrandMark } from "@/components/BrandMark";
 
 export default function Home() {
   const router = useRouter();
@@ -31,8 +32,11 @@ export default function Home() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className="mb-3 font-mono text-6xl font-semibold tnum tracking-tight">12:00</div>
-          <h1 className="text-2xl font-semibold">Presenter Timer</h1>
-          <p className="mt-2 text-sm text-muted">
+          <h1>
+            <BrandMark size="lg" />
+          </h1>
+          <p className="mt-1 text-xs text-muted">마무리 부탁드립니다</p>
+          <p className="mt-3 text-sm text-muted">
             방을 만들면 바로 링크가 발급됩니다. 노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
           </p>
         </div>

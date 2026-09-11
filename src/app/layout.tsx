@@ -6,8 +6,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Presenter Timer",
-  description: "원격 제어형 발표 타이머",
+  title: "마부 — 발표 타이머",
+  description: "마무리 부탁드립니다. 원격 제어형 발표 타이머",
 };
 
 export const viewport: Viewport = {

@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import type { Timer } from "../../shared/types";
+import { BrandMark } from "../components/BrandMark";
 import { ConnectionBadge } from "../components/ConnectionBadge";
 import { CsvImportDialog } from "../components/CsvImportDialog";
 import { CurrentTimerCard } from "../components/CurrentTimerCard";
@@ -56,7 +57,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
     <RoomGate requireController>
       <div className="flex min-h-screen flex-col">
         <header className="flex items-center gap-3 border-b border-line px-4 py-2">
-          <span className="font-mono text-sm font-semibold tnum">⏱</span>
+          <BrandMark />
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
           <ConnectionBadge />
           <span className="hidden text-[11px] text-muted lg:inline">Space 재생/정지 · N 다음 · P 이전 · R 리셋</span>

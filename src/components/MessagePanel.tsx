@@ -10,7 +10,7 @@ const COLORS: { value: MessageColor; label: string; className: string }[] = [
   { value: "green", label: "초록", className: "bg-ok" },
 ];
 
-const PRESET_KEY = "presenter-timer:presets";
+const PRESET_KEY = "mabu:presets";
 const DEFAULT_PRESETS = ["마무리해 주세요", "5분 남았습니다", "시간이 종료되었습니다", "마이크를 가까이 대주세요", "Q&A 시작"];
 
 function loadPresets(): string[] {
