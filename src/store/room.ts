@@ -43,7 +43,10 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
     // 존재하지 않는 방이면 업그레이드가 404로 거절되므로 REST로 확인해 안내한다.
     fetch(`/api/rooms/${encodeURIComponent(roomId)}`)
       .then((r) => {
-        if (r.status === 404) set({ notFound: true });
+        if (r.status === 404) {
+          socket.close(); // 없는 방에 재연결을 반복하지 않는다
+          set({ notFound: true });
+        }
       })
       .catch(() => {});
   },
