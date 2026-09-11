@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Message, MessageColor } from "../../shared/types";
 import { EMPTY_MESSAGES, useRoomStore } from "../store/room";
-import { Tooltip } from "./Tooltip";
+import { HelpDot, HelpList, Tooltip } from "./Tooltip";
 
 const COLORS: { value: MessageColor; label: string; className: string }[] = [
   { value: "white", label: "흰색", className: "bg-white border-line" },
@@ -63,8 +63,23 @@ export function MessagePanel() {
   return (
     <div className="card flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
-        <h2 className="text-sm font-semibold">
-          메시지 {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
+        <h2 className="flex items-center text-sm font-semibold">
+          메시지
+          <HelpDot
+            content={
+              <HelpList
+                title="메시지"
+                items={[
+                  "입력창에 적고 표시를 누르면 뷰어 아래쪽에 바로 뜹니다.",
+                  "색상, 굵게, 깜빡임을 고를 수 있습니다.",
+                  "자주 쓰는 문구는 프리셋 저장으로 등록해 두세요.",
+                  "한 번에 두 개까지 보입니다. 띄우고 지워도 타이머는 그대로 갑니다.",
+                  "청중 질문 폼으로 들어온 질문도 여기 쌓입니다. 표시를 누르면 뷰어에 올라갑니다.",
+                ]}
+              />
+            }
+          />
+          {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
         </h2>
         {visibleCount > 0 && (
           <Tooltip text="뷰어에 떠 있는 메시지를 전부 내립니다. 목록에는 남습니다">

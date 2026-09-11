@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { Timer } from "../../shared/types";
 import { formatScheduled, msToClockInput } from "../lib/time";
 import { selectSortedTimers, useRoomStore } from "../store/room";
-import { Tooltip } from "./Tooltip";
+import { HelpDot, HelpList, Tooltip } from "./Tooltip";
 
 export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => void; onAdd: () => void; onImport: () => void }) {
   const timers = useRoomStore(selectSortedTimers);
@@ -27,8 +27,22 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
   return (
     <div className="card flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
-        <h2 className="text-sm font-semibold">
-          타이머 <span className="text-muted">{timers.length}</span>
+        <h2 className="flex items-center text-sm font-semibold">
+          타이머 <span className="ml-1 text-muted">{timers.length}</span>
+          <HelpDot
+            content={
+              <HelpList
+                title="타이머 만들기"
+                items={[
+                  "+ 추가로 하나씩 넣거나 CSV로 한꺼번에 불러옵니다.",
+                  "항목을 누르면 편집 창이 열리고, 끌어다 놓으면 순서가 바뀝니다.",
+                  "▶를 누르면 그 세션으로 바꿔서 바로 시작합니다.",
+                  "종료 시 다음 타이머 자동 시작을 켜 두면 끝나는 순간 다음 세션으로 넘어갑니다.",
+                  "메모는 운영자 화면에만 보입니다.",
+                ]}
+              />
+            }
+          />
         </h2>
         <div className="flex gap-1">
           <Tooltip text="CSV 파일이나 붙여넣은 표로 세션을 한꺼번에 넣습니다">

@@ -4,6 +4,7 @@ import { formatMs } from "../lib/time";
 import { selectActiveTimer, useRoomStore } from "../store/room";
 import { BigTime } from "./BigTime";
 import { PlaybackControls } from "./PlaybackControls";
+import { HelpDot, HelpList } from "./Tooltip";
 
 const STATUS_LABEL = { idle: "대기", running: "진행 중", paused: "일시정지" } as const;
 
@@ -30,6 +31,23 @@ export function CurrentTimerCard({ large = false, compact = false }: { large?: b
             <span className="text-muted">활성 타이머 없음</span>
           )}
         </div>
+        {!compact && (
+          <HelpDot
+            align="end"
+            content={
+              <HelpList
+                title="진행하면서"
+                items={[
+                  "일시정지는 남은 시간을 그대로 두고 멈춥니다.",
+                  "리셋은 지금 세션을 처음 길이로 되돌립니다. 정지는 세션 선택까지 풉니다.",
+                  "가감 버튼은 진행 중에도 바로 반영됩니다.",
+                  "이전, 다음을 누르면 세션이 바뀝니다. 돌아가던 중이었다면 바뀐 세션이 곧바로 시작됩니다.",
+                  "종료 안내 시점이 되면 뷰어가 노란색으로, 0이 되면 빨간색으로 바뀌고 초과 시간이 올라갑니다.",
+                ]}
+              />
+            }
+          />
+        )}
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${
             status === "running" ? "bg-ok/15 text-ok-ink" : status === "paused" ? "bg-warn/20 text-warn-ink" : "bg-panel-2 text-subtext"

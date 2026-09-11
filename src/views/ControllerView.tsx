@@ -5,18 +5,17 @@ import { BrandMark } from "../components/BrandMark";
 import { ConnectionBadge } from "../components/ConnectionBadge";
 import { CsvImportDialog } from "../components/CsvImportDialog";
 import { CurrentTimerCard } from "../components/CurrentTimerCard";
-import { GuideDialog } from "../components/GuideDialog";
 import { MessagePanel } from "../components/MessagePanel";
 import { RoomGate } from "../components/RoomGate";
 import { SettingsDialog } from "../components/SettingsDialog";
 import { ShareDialog } from "../components/ShareDialog";
 import { TimerEditor } from "../components/TimerEditor";
 import { TimerList } from "../components/TimerList";
-import { Tooltip } from "../components/Tooltip";
+import { HelpList, Tooltip } from "../components/Tooltip";
 import { useRoomConnection } from "../hooks/useRoomConnection";
 import { useRoomStore } from "../store/room";
 
-type Dialog = null | "share" | "settings" | "csv" | "guide" | { edit: Timer | null };
+type Dialog = null | "share" | "settings" | "csv" | { edit: Timer | null };
 
 export function ControllerView({ roomId, controllerKey }: { roomId: string; controllerKey: string }) {
   useRoomConnection(roomId, controllerKey);
@@ -62,11 +61,12 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           <BrandMark />
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
           <ConnectionBadge />
-          <span className="hidden text-[11px] text-muted lg:inline">Space 재생/정지 · N 다음 · P 이전 · R 리셋</span>
-          <Tooltip text="화면 종류, 타이머 만들기, 단축키까지 한눈에 봅니다" side="bottom">
-            <button className="btn btn-ghost btn-sm text-muted" onClick={() => setDialog("guide")}>
-              사용 안내
-            </button>
+          <Tooltip
+            side="bottom"
+            align="end"
+            content={<HelpList title="단축키" items={[<><kbd>Space</kbd> 재생과 일시정지</>, <><kbd>N</kbd> 다음 세션</>, <><kbd>P</kbd> 이전 세션</>, <><kbd>R</kbd> 리셋</>, "입력창에 커서가 있을 때는 동작하지 않습니다"]} />}
+          >
+            <span className="hidden cursor-default text-[11px] text-muted lg:inline">단축키 ⌨</span>
           </Tooltip>
           <Tooltip text="행사 이름, 뷰어에 보일 요소, 알림음, 시간 형식을 바꿉니다" side="bottom">
             <button className="btn btn-sm" onClick={() => setDialog("settings")}>
@@ -84,7 +84,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           <section className="min-h-[300px] lg:h-[calc(100vh-80px)]">
             <TimerList onEdit={(t) => setDialog({ edit: t })} onAdd={() => setDialog({ edit: null })} onImport={() => setDialog("csv")} />
           </section>
-          <section className="lg:h-[calc(100vh-80px)] lg:overflow-y-auto lg:overflow-x-hidden">
+          <section className="lg:h-[calc(100vh-80px)]">
             <CurrentTimerCard large />
           </section>
           <section className="min-h-[400px] lg:h-[calc(100vh-80px)]">
@@ -94,7 +94,6 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
 
         <ShareDialog open={dialog === "share"} onClose={close} roomId={roomId} controllerKey={controllerKey} />
         <SettingsDialog open={dialog === "settings"} onClose={close} />
-        <GuideDialog open={dialog === "guide"} onClose={close} />
         <CsvImportDialog open={dialog === "csv"} onClose={close} />
         <TimerEditor open={typeof dialog === "object" && dialog !== null && "edit" in dialog} timer={typeof dialog === "object" && dialog !== null ? dialog.edit : null} onClose={close} />
       </div>
