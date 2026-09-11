@@ -8,6 +8,8 @@ import { newControllerKey, newRoomId } from "./ids";
 const SNAPSHOT_INTERVAL_MS = 5_000;
 const EXPIRY_MS = 24 * 60 * 60 * 1000;
 const EXPIRY_CHECK_MS = 10 * 60 * 1000;
+// 공개 서비스에서 방이 무한히 쌓이는 걸 막는 상한. 넘으면 가장 오래 쉰 방부터 지운다
+const MAX_ROOMS = Number(process.env.MAX_ROOMS ?? 2000);
 
 /**
  * 방 상태는 인메모리 Map이 단일 진실. SQLite는 5초 주기 스냅샷용이며 재시작 시 복구에만 쓰인다.
@@ -18,7 +20,7 @@ export class RoomStore {
   private db: DatabaseSync;
   private onExpire: (roomId: string) => void = () => {};
 
-  constructor(dataDir = path.join(process.cwd(), "data")) {
+  constructor(dataDir = process.env.DATA_DIR ?? path.join(process.cwd(), "data")) {
     mkdirSync(dataDir, { recursive: true });
     this.db = new DatabaseSync(path.join(dataDir, "rooms.db"));
     this.db.exec(`
@@ -87,6 +89,7 @@ export class RoomStore {
   }
 
   create(name = "새 발표"): Room {
+    this.evictIfFull();
     const now = Date.now();
     const room: Room = {
       id: newRoomId(),
@@ -103,6 +106,19 @@ export class RoomStore {
     this.rooms.set(room.id, room);
     this.dirty.add(room.id);
     return room;
+  }
+
+  private evictIfFull() {
+    if (this.rooms.size < MAX_ROOMS) return;
+    const idle = [...this.rooms.values()]
+      .filter((r) => r.playback.status !== "running")
+      .sort((a, b) => a.lastActiveAt - b.lastActiveAt);
+    for (const room of idle.slice(0, Math.max(1, Math.ceil(MAX_ROOMS * 0.05)))) {
+      this.rooms.delete(room.id);
+      this.dirty.add(room.id);
+      this.onExpire(room.id);
+    }
+    console.log(`[store] evicted idle rooms, now ${this.rooms.size}`);
   }
 
   get(id: string): Room | undefined {

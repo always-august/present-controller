@@ -2,6 +2,15 @@
 
 **마무리 부탁드립니다.** 원격 제어형 발표 타이머. 운영자가 노트북/휴대폰에서 타이머와 메시지를 제어하고, 발표자는 공유 링크로 열린 풀스크린 화면을 보면서 발표합니다. stagetimer.io 와 같은 구조입니다.
 
+## 배포 (Railway)
+
+1. Railway에서 New Project → Deploy from GitHub repo → 이 저장소 선택. `Dockerfile`과 `railway.json`을 자동으로 읽는다.
+2. 서비스 → Variables는 기본값으로 충분하다. (`PORT`는 Railway가 넣어주고, `DATA_DIR=/data`는 Dockerfile에 있음)
+3. 서비스 → Volumes → Add Volume, Mount path `/data`. 재배포해도 방이 유지되도록.
+4. Settings → Networking → Custom Domain에 도메인 입력 → 알려주는 CNAME을 DNS에 추가. 몇 분 뒤 HTTPS까지 자동.
+
+환경변수는 `.env.example` 참고. 공개 엔드포인트(방 생성, 청중 질문)에는 IP당 속도 제한이 걸려 있고, 방 개수는 `MAX_ROOMS`를 넘으면 가장 오래 쉰 방부터 정리된다.
+
 ## 실행
 
 ```bash

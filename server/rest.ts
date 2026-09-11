@@ -1,7 +1,12 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { MessageColor, Room } from "../shared/types";
 import type { RoomEngine } from "./engine";
+import { clientIp, RateLimiter } from "./rateLimit";
 import { toPublicRoom, type RoomStore } from "./store";
+
+// 방 생성: IP당 10분에 10개. 청중 질문: IP당 1분에 5개
+const createLimiter = new RateLimiter(10, 10 * 60 * 1000);
+const questionLimiter = new RateLimiter(5, 60 * 1000);
 
 /**
  * 외부 도구(Stream Deck 등) 연동용 최소 REST.
@@ -37,6 +42,12 @@ export function createRestHandler(store: RoomStore, engine: RoomEngine) {
 
     // POST /api/rooms
     if (parts.length === 2 && req.method === "POST") {
+      const rl = createLimiter.check(clientIp(req));
+      if (!rl.ok) {
+        res.setHeader("Retry-After", String(rl.retryAfterSec));
+        json(429, { error: "too many rooms created, try again later" });
+        return true;
+      }
       const room = store.create(typeof body.name === "string" ? body.name : undefined);
       json(201, { roomId: room.id, controllerKey: room.controllerKey });
       return true;
@@ -57,6 +68,12 @@ export function createRestHandler(store: RoomStore, engine: RoomEngine) {
 
     // POST /api/rooms/:id/questions (공개)
     if (action === "questions" && req.method === "POST") {
+      const rl = questionLimiter.check(clientIp(req));
+      if (!rl.ok) {
+        res.setHeader("Retry-After", String(rl.retryAfterSec));
+        json(429, { error: "too many questions, try again later" });
+        return true;
+      }
       const text = String(body.text ?? "").trim();
       if (!text) {
         json(400, { error: "text required" });

@@ -19,11 +19,12 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim() || undefined }),
       });
+      if (res.status === 429) throw new Error("방을 너무 많이 만들었습니다. 잠시 뒤 다시 시도해 주세요.");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { roomId, controllerKey } = (await res.json()) as { roomId: string; controllerKey: string };
       router.push(`/r/${roomId}?key=${controllerKey}`);
     } catch (e) {
-      setError(`방을 만들지 못했습니다: ${(e as Error).message}`);
+      setError((e as Error).message.startsWith("HTTP") ? `방을 만들지 못했습니다: ${(e as Error).message}` : (e as Error).message);
       setBusy(false);
     }
   };
@@ -113,6 +114,7 @@ export default function Home() {
               }
             />
           </li>
+          <li>· 링크를 아는 사람은 누구나 뷰어를 볼 수 있습니다. 비밀키가 붙은 링크는 운영자끼리만 주고받으세요.</li>
           <li>· 24시간 동안 아무도 쓰지 않은 방은 지워집니다.</li>
         </ul>
       </div>
