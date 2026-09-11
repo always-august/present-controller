@@ -5,6 +5,7 @@ import { BrandMark } from "../components/BrandMark";
 import { ConnectionBadge } from "../components/ConnectionBadge";
 import { CsvImportDialog } from "../components/CsvImportDialog";
 import { CurrentTimerCard } from "../components/CurrentTimerCard";
+import { GuideDialog } from "../components/GuideDialog";
 import { MessagePanel } from "../components/MessagePanel";
 import { RoomGate } from "../components/RoomGate";
 import { SettingsDialog } from "../components/SettingsDialog";
@@ -14,7 +15,7 @@ import { TimerList } from "../components/TimerList";
 import { useRoomConnection } from "../hooks/useRoomConnection";
 import { useRoomStore } from "../store/room";
 
-type Dialog = null | "share" | "settings" | "csv" | { edit: Timer | null };
+type Dialog = null | "share" | "settings" | "csv" | "guide" | { edit: Timer | null };
 
 export function ControllerView({ roomId, controllerKey }: { roomId: string; controllerKey: string }) {
   useRoomConnection(roomId, controllerKey);
@@ -61,6 +62,9 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
           <ConnectionBadge />
           <span className="hidden text-[11px] text-muted lg:inline">Space 재생/정지 · N 다음 · P 이전 · R 리셋</span>
+          <button className="btn btn-ghost btn-sm text-muted" onClick={() => setDialog("guide")}>
+            사용 안내
+          </button>
           <button className="btn btn-sm" onClick={() => setDialog("settings")}>
             설정
           </button>
@@ -83,6 +87,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
 
         <ShareDialog open={dialog === "share"} onClose={close} roomId={roomId} controllerKey={controllerKey} />
         <SettingsDialog open={dialog === "settings"} onClose={close} />
+        <GuideDialog open={dialog === "guide"} onClose={close} />
         <CsvImportDialog open={dialog === "csv"} onClose={close} />
         <TimerEditor open={typeof dialog === "object" && dialog !== null && "edit" in dialog} timer={typeof dialog === "object" && dialog !== null ? dialog.edit : null} onClose={close} />
       </div>

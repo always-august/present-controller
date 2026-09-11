@@ -2,12 +2,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { GuideDialog } from "@/components/GuideDialog";
 
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const createRoom = async () => {
     setBusy(true);
@@ -31,13 +33,14 @@ export default function Home() {
     <main className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mb-3 font-mono text-6xl font-semibold tnum tracking-tight">12:00</div>
           <h1>
             <BrandMark size="lg" />
           </h1>
-          <p className="mt-1 text-xs text-muted">마무리 부탁드립니다</p>
-          <p className="mt-3 text-sm text-muted">
-            방을 만들면 바로 링크가 발급됩니다. 노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
+          <p className="mt-2 text-base font-medium text-white/80">발표자 타이머 컨트롤러</p>
+          <p className="mt-4 text-sm leading-relaxed text-muted">
+            방을 만들면 바로 링크가 발급됩니다.
+            <br />
+            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
           </p>
         </div>
         <form
@@ -64,7 +67,11 @@ export default function Home() {
             {busy ? "만드는 중…" : "방 만들기"}
           </button>
           {error && <p className="text-sm text-danger">{error}</p>}
+          <button type="button" className="btn btn-ghost w-full text-muted" onClick={() => setGuideOpen(true)}>
+            사용 안내
+          </button>
         </form>
+        <GuideDialog open={guideOpen} onClose={() => setGuideOpen(false)} />
         <ul className="mt-6 space-y-1 text-xs text-muted">
           <li>· 가입 없이 즉시 사용. 컨트롤러 링크(비밀키 포함)는 운영자만 보관하세요.</li>
           <li>· 뷰어는 네트워크가 끊겨도 로컬 계산으로 계속 카운트합니다.</li>

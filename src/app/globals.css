@@ -83,3 +83,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .card {
   @apply rounded-xl border border-line bg-panel;
 }
+
+kbd {
+  @apply rounded border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[11px];
+}
