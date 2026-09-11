@@ -4,6 +4,7 @@ import type { Appearance, StartMode, Timer, TimerInput, TimerMode } from "../../
 import { msToClockInput, parseDuration } from "../lib/time";
 import { useRoomStore } from "../store/room";
 import { Modal } from "./Modal";
+import { HelpDot } from "./Tooltip";
 
 interface FormState {
   title: string;
@@ -107,7 +108,7 @@ export function TimerEditor({ open, timer, onClose }: { open: boolean; timer: Ti
             <input className="input" value={form.speaker} onChange={(e) => set("speaker", e.target.value)} placeholder="이름" />
           </div>
           <div>
-            <label className="label">모드</label>
+            <label className="label">모드<HelpDot text="카운트다운은 남은 시간을, 카운트업은 지난 시간을 셉니다. 현재 시각은 시계만 보여줍니다" /></label>
             <select className="input" value={form.mode} onChange={(e) => set("mode", e.target.value as TimerMode)}>
               <option value="countdown">카운트다운</option>
               <option value="countup">카운트업</option>
@@ -115,30 +116,30 @@ export function TimerEditor({ open, timer, onClose }: { open: boolean; timer: Ti
             </select>
           </div>
           <div>
-            <label className="label">길이 (MM:SS 또는 H:MM:SS)</label>
+            <label className="label">길이<HelpDot text="10:00, 1:30:00, 90s, 5m 어떤 식으로 적어도 됩니다" /></label>
             <input className="input font-mono tnum" value={form.duration} onChange={(e) => set("duration", e.target.value)} placeholder="10:00" disabled={form.mode === "clock"} />
           </div>
           <div>
-            <label className="label">종료 안내 시점 (남은 시간)</label>
+            <label className="label">종료 안내 시점<HelpDot text="남은 시간이 이 값 아래로 내려가면 뷰어 숫자가 노란색으로 바뀌고 알림음과 배너가 나옵니다. 0으로 두면 끕니다" /></label>
             <input className="input font-mono tnum" value={form.wrapUp} onChange={(e) => set("wrapUp", e.target.value)} placeholder="1:00" />
-            <p className="mt-1 text-[11px] text-muted">이 시간 이하로 남으면 노란색 전환 + 알림</p>
+            <p className="mt-1 text-[11px] text-muted">이만큼 남으면 노란색으로 바뀌고 알림이 울립니다</p>
           </div>
           <div>
-            <label className="label">뷰어 배경</label>
+            <label className="label">뷰어 배경<HelpDot text="크로마키를 고르면 뷰어 배경이 초록색이 됩니다. OBS에서 합성할 때 씁니다" /></label>
             <select className="input" value={form.appearance} onChange={(e) => set("appearance", e.target.value as Appearance)}>
               <option value="default">기본 (검정)</option>
               <option value="chroma">크로마키 (초록, OBS용)</option>
             </select>
           </div>
           <div>
-            <label className="label">시작 방식</label>
+            <label className="label">시작 방식<HelpDot text="예약을 고르면 정해 둔 시각에 서버가 알아서 시작합니다. 뷰어만 열려 있어도 됩니다" /></label>
             <select className="input" value={form.startMode} onChange={(e) => set("startMode", e.target.value as StartMode)}>
               <option value="manual">수동</option>
               <option value="scheduled">예약</option>
             </select>
           </div>
           <div>
-            <label className="label">예약 시작 시각</label>
+            <label className="label">예약 시작 시각<HelpDot text="이 기기의 시간대 기준입니다" /></label>
             <input
               type="datetime-local"
               className="input"
@@ -150,9 +151,10 @@ export function TimerEditor({ open, timer, onClose }: { open: boolean; timer: Ti
           <label className="col-span-2 flex items-center gap-2 text-sm">
             <input type="checkbox" checked={form.chainNext} onChange={(e) => set("chainNext", e.target.checked)} />
             종료 시 다음 타이머 자동 시작
+            <HelpDot text="0이 되는 순간 목록의 다음 세션이 이어서 시작됩니다. 초과 시간은 생기지 않습니다" />
           </label>
           <div className="col-span-2">
-            <label className="label">메모 (운영자만 보임)</label>
+            <label className="label">메모<HelpDot text="컨트롤러에서만 보입니다. 뷰어와 아젠다에는 나오지 않습니다" /></label>
             <textarea className="input min-h-20" value={form.notes} onChange={(e) => set("notes", e.target.value)} />
           </div>
         </div>

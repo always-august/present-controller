@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { Timer } from "../../shared/types";
 import { formatScheduled, msToClockInput } from "../lib/time";
 import { selectSortedTimers, useRoomStore } from "../store/room";
+import { Tooltip } from "./Tooltip";
 
 export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => void; onAdd: () => void; onImport: () => void }) {
   const timers = useRoomStore(selectSortedTimers);
@@ -30,20 +31,24 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
           타이머 <span className="text-muted">{timers.length}</span>
         </h2>
         <div className="flex gap-1">
-          <button className="btn btn-sm" onClick={onImport} title="CSV 임포트">
-            CSV
-          </button>
-          <button className="btn btn-primary btn-sm" onClick={onAdd}>
-            + 추가
-          </button>
+          <Tooltip text="CSV 파일이나 붙여넣은 표로 세션을 한꺼번에 넣습니다">
+            <button className="btn btn-sm" onClick={onImport}>
+              CSV
+            </button>
+          </Tooltip>
+          <Tooltip text="세션을 하나 추가합니다. 제목, 발표자, 길이, 종료 안내 시점을 정합니다">
+            <button className="btn btn-primary btn-sm" onClick={onAdd}>
+              + 추가
+            </button>
+          </Tooltip>
         </div>
       </div>
       <ul className="flex-1 overflow-y-auto p-2">
         {timers.length === 0 && (
           <li className="p-6 text-center text-sm text-muted">
-            타이머를 추가하세요.
+            아직 세션이 없습니다.
             <br />
-            드래그로 순서를 바꿀 수 있습니다.
+            + 추가나 CSV로 넣어 보세요.
           </li>
         )}
         {timers.map((t, i) => {
@@ -75,7 +80,7 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
               <button
                 className="min-w-0 flex-1 text-left"
                 onClick={() => onEdit(t)}
-                title="클릭하여 편집"
+                title="누르면 편집 창이 열립니다. 끌어다 놓으면 순서가 바뀝니다"
               >
                 <div className="truncate text-sm font-medium">{t.title || <span className="text-muted">제목 없음</span>}</div>
                 <div className="flex flex-wrap items-center gap-x-2 text-xs text-muted">
@@ -88,17 +93,18 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
                   )}
                 </div>
               </button>
-              <button
-                className={`btn btn-sm shrink-0 ${active && status === "running" ? "btn-danger" : ""}`}
-                onClick={() =>
-                  active && status === "running"
-                    ? send({ type: "playback:pause", payload: {} })
-                    : send({ type: "playback:start", payload: { timerId: t.id } })
-                }
-                title={active && status === "running" ? "일시정지" : "이 타이머 시작"}
-              >
-                {active && status === "running" ? "❚❚" : "▶"}
-              </button>
+              <Tooltip text={active && status === "running" ? "잠깐 멈춥니다" : "이 세션으로 바꿔서 바로 시작합니다"}>
+                <button
+                  className={`btn btn-sm shrink-0 ${active && status === "running" ? "btn-danger" : ""}`}
+                  onClick={() =>
+                    active && status === "running"
+                      ? send({ type: "playback:pause", payload: {} })
+                      : send({ type: "playback:start", payload: { timerId: t.id } })
+                  }
+                >
+                  {active && status === "running" ? "❚❚" : "▶"}
+                </button>
+              </Tooltip>
             </li>
           );
         })}

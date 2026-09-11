@@ -12,6 +12,7 @@ import { SettingsDialog } from "../components/SettingsDialog";
 import { ShareDialog } from "../components/ShareDialog";
 import { TimerEditor } from "../components/TimerEditor";
 import { TimerList } from "../components/TimerList";
+import { Tooltip } from "../components/Tooltip";
 import { useRoomConnection } from "../hooks/useRoomConnection";
 import { useRoomStore } from "../store/room";
 
@@ -62,22 +63,28 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
           <ConnectionBadge />
           <span className="hidden text-[11px] text-muted lg:inline">Space 재생/정지 · N 다음 · P 이전 · R 리셋</span>
-          <button className="btn btn-ghost btn-sm text-muted" onClick={() => setDialog("guide")}>
-            사용 안내
-          </button>
-          <button className="btn btn-sm" onClick={() => setDialog("settings")}>
-            설정
-          </button>
-          <button className="btn btn-primary btn-sm" onClick={() => setDialog("share")}>
-            링크 공유
-          </button>
+          <Tooltip text="화면 종류, 타이머 만들기, 단축키까지 한눈에 봅니다" side="bottom">
+            <button className="btn btn-ghost btn-sm text-muted" onClick={() => setDialog("guide")}>
+              사용 안내
+            </button>
+          </Tooltip>
+          <Tooltip text="행사 이름, 뷰어에 보일 요소, 알림음, 시간 형식을 바꿉니다" side="bottom">
+            <button className="btn btn-sm" onClick={() => setDialog("settings")}>
+              설정
+            </button>
+          </Tooltip>
+          <Tooltip text="뷰어, 아젠다, 오퍼레이터 링크와 QR 코드를 복사합니다" side="bottom">
+            <button className="btn btn-primary btn-sm" onClick={() => setDialog("share")}>
+              링크 공유
+            </button>
+          </Tooltip>
         </header>
 
         <main className="grid flex-1 gap-4 bg-panel-2 p-4 lg:grid-cols-[320px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
           <section className="min-h-[300px] lg:h-[calc(100vh-80px)]">
             <TimerList onEdit={(t) => setDialog({ edit: t })} onAdd={() => setDialog({ edit: null })} onImport={() => setDialog("csv")} />
           </section>
-          <section className="lg:h-[calc(100vh-80px)] lg:overflow-y-auto">
+          <section className="lg:h-[calc(100vh-80px)] lg:overflow-y-auto lg:overflow-x-hidden">
             <CurrentTimerCard large />
           </section>
           <section className="min-h-[400px] lg:h-[calc(100vh-80px)]">

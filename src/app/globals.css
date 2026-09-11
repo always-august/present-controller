@@ -140,3 +140,7 @@ input[type="number"]::-webkit-outer-spin-button {
 kbd {
   @apply rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[11px] text-subtext;
 }
+
+code {
+  @apply rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[0.85em] text-subtext;
+}

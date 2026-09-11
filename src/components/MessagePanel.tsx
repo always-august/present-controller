@@ -2,6 +2,7 @@
 import { useState } from "react";
 import type { Message, MessageColor } from "../../shared/types";
 import { EMPTY_MESSAGES, useRoomStore } from "../store/room";
+import { Tooltip } from "./Tooltip";
 
 const COLORS: { value: MessageColor; label: string; className: string }[] = [
   { value: "white", label: "흰색", className: "bg-white border-line" },
@@ -66,12 +67,14 @@ export function MessagePanel() {
           메시지 {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
         </h2>
         {visibleCount > 0 && (
-          <button
-            className="btn btn-sm"
-            onClick={() => messages.filter((m) => m.visible).forEach((m) => send({ type: "message:toggle", payload: { id: m.id, visible: false } }))}
-          >
-            모두 숨김
-          </button>
+          <Tooltip text="뷰어에 떠 있는 메시지를 전부 내립니다. 목록에는 남습니다">
+            <button
+              className="btn btn-sm"
+              onClick={() => messages.filter((m) => m.visible).forEach((m) => send({ type: "message:toggle", payload: { id: m.id, visible: false } }))}
+            >
+              모두 숨김
+            </button>
+          </Tooltip>
         )}
       </div>
 
@@ -84,41 +87,49 @@ export function MessagePanel() {
           }}
         >
           <input className="input" value={text} onChange={(e) => setText(e.target.value)} placeholder="발표자에게 보낼 메시지" maxLength={500} />
-          <button className="btn btn-primary shrink-0" type="submit" disabled={!text.trim()}>
-            표시
-          </button>
+          <Tooltip text="적은 메시지를 뷰어 아래쪽에 바로 띄웁니다. Enter로도 됩니다">
+            <button className="btn btn-primary shrink-0" type="submit" disabled={!text.trim()}>
+              표시
+            </button>
+          </Tooltip>
         </form>
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <div className="flex gap-1">
             {COLORS.map((c) => (
+              <Tooltip key={c.value} text={`${c.label} 글자로 띄웁니다`}>
               <button
-                key={c.value}
                 type="button"
-                title={c.label}
                 onClick={() => setColor(c.value)}
                 className={`h-6 w-6 rounded-full border ${c.className} ${color === c.value ? "ring-2 ring-accent ring-offset-2 ring-offset-panel" : "border-line opacity-70 hover:opacity-100"}`}
               />
+              </Tooltip>
             ))}
           </div>
-          <label className="flex items-center gap-1">
-            <input type="checkbox" checked={bold} onChange={(e) => setBold(e.target.checked)} /> 굵게
-          </label>
-          <label className="flex items-center gap-1">
-            <input type="checkbox" checked={flash} onChange={(e) => setFlash(e.target.checked)} /> 깜빡임
-          </label>
-          <button
-            type="button"
-            className="btn btn-ghost btn-sm ml-auto"
-            onClick={() => text.trim() && !presets.includes(text.trim()) && savePresets([...presets, text.trim()])}
-            disabled={!text.trim()}
-          >
-            프리셋 저장
-          </button>
+          <Tooltip text="글자를 굵게 띄웁니다. 멀리서도 잘 보입니다">
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={bold} onChange={(e) => setBold(e.target.checked)} /> 굵게
+            </label>
+          </Tooltip>
+          <Tooltip text="1초 간격으로 깜빡여서 눈에 띄게 합니다">
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={flash} onChange={(e) => setFlash(e.target.checked)} /> 깜빡임
+            </label>
+          </Tooltip>
+          <Tooltip text="지금 적은 문구를 프리셋으로 남깁니다. 이 브라우저에 저장됩니다" className="ml-auto">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => text.trim() && !presets.includes(text.trim()) && savePresets([...presets, text.trim()])}
+              disabled={!text.trim()}
+            >
+              프리셋 저장
+            </button>
+          </Tooltip>
         </div>
         <div className="flex flex-wrap gap-1">
           {presets.map((p) => (
             <span key={p} className="group inline-flex items-center overflow-hidden rounded-full border border-transparent bg-panel-2 text-xs font-medium text-subtext transition hover:border-line">
-              <button type="button" className="px-3 py-1.5 hover:text-ink" onClick={() => show(p)} title="바로 표시">
+              <button type="button" className="px-3 py-1.5 hover:text-ink" onClick={() => show(p)} title="누르면 이 문구가 바로 뷰어에 뜹니다">
                 {p}
               </button>
               <button
@@ -159,21 +170,24 @@ function MessageRow({ m }: { m: Message }) {
   const send = useRoomStore((s) => s.send);
   return (
     <div className={`mb-1 flex items-center gap-2 rounded-lg px-2 py-1.5 ${m.visible ? "bg-ok/10" : "hover:bg-panel-2"}`}>
-      <button
-        className={`shrink-0 rounded px-2 py-1 text-xs font-medium ${m.visible ? "bg-ok text-white" : "bg-panel-2 text-subtext hover:text-ink"}`}
-        onClick={() => send({ type: "message:toggle", payload: { id: m.id } })}
-        title={m.visible ? "숨기기" : "표시"}
-      >
-        {m.visible ? "표시 중" : "표시"}
-      </button>
+      <Tooltip text={m.visible ? "뷰어에서 내립니다" : "뷰어에 띄웁니다. 두 개까지 같이 보입니다"}>
+        <button
+          className={`shrink-0 rounded px-2 py-1 text-xs font-medium ${m.visible ? "bg-ok text-white" : "bg-panel-2 text-subtext hover:text-ink"}`}
+          onClick={() => send({ type: "message:toggle", payload: { id: m.id } })}
+        >
+          {m.visible ? "표시 중" : "표시"}
+        </button>
+      </Tooltip>
       <span className={`min-w-0 flex-1 truncate text-sm ${TEXT_COLOR[m.color]} ${m.bold ? "font-semibold" : ""}`} title={m.text}>
         {m.source === "audience" && <span className="mr-1 text-xs text-muted">Q</span>}
         {m.text}
       </span>
       {m.flash && <span className="text-xs text-muted" title="깜빡임">⚡</span>}
-      <button className="btn btn-ghost btn-sm text-muted" onClick={() => send({ type: "message:delete", payload: { id: m.id } })} title="삭제">
-        ✕
-      </button>
+      <Tooltip text="목록에서 지웁니다">
+        <button className="btn btn-ghost btn-sm text-muted" onClick={() => send({ type: "message:delete", payload: { id: m.id } })}>
+          ✕
+        </button>
+      </Tooltip>
     </div>
   );
 }

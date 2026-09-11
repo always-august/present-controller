@@ -1,5 +1,6 @@
 "use client";
 import { useRoomStore } from "../store/room";
+import { Tooltip } from "./Tooltip";
 
 const ADJUSTMENTS = [
   { label: "−1분", deltaMs: -60_000 },
@@ -19,41 +20,51 @@ export function PlaybackControls({ compact = false, large = false }: { compact?:
   return (
     <div className="space-y-3">
       <div className={`flex flex-wrap items-center justify-center gap-2 ${large ? "gap-3" : ""}`}>
-        <button className={`btn ${size}`} onClick={() => send({ type: "playback:prev", payload: {} })} disabled={!hasTimers} title="이전 타이머 (P)">
-          ⏮ 이전
-        </button>
-        <button
-          className={`btn ${running ? "btn-danger" : "btn-primary"} min-w-32 ${size}`}
-          onClick={() => send({ type: running ? "playback:pause" : "playback:start", payload: {} })}
-          disabled={!hasTimers}
-          title="시작 / 일시정지 (Space)"
-        >
-          {running ? "❚❚ 일시정지" : status === "paused" ? "▶ 재개" : "▶ 시작"}
-        </button>
-        <button className={`btn ${size}`} onClick={() => send({ type: "playback:next", payload: {} })} disabled={!hasTimers} title="다음 타이머 (N)">
-          다음 ⏭
-        </button>
+        <Tooltip text="앞 세션으로 넘어갑니다. 돌아가던 중이면 바로 시작됩니다. 단축키 P">
+          <button className={`btn ${size}`} onClick={() => send({ type: "playback:prev", payload: {} })} disabled={!hasTimers}>
+            ⏮ 이전
+          </button>
+        </Tooltip>
+        <Tooltip text={running ? "잠깐 멈춥니다. 남은 시간은 그대로 둡니다. 단축키 Space" : "지금 세션을 시작합니다. 단축키 Space"}>
+          <button
+            className={`btn ${running ? "btn-danger" : "btn-primary"} min-w-32 ${size}`}
+            onClick={() => send({ type: running ? "playback:pause" : "playback:start", payload: {} })}
+            disabled={!hasTimers}
+          >
+            {running ? "❚❚ 일시정지" : status === "paused" ? "▶ 재개" : "▶ 시작"}
+          </button>
+        </Tooltip>
+        <Tooltip text="다음 세션으로 넘어갑니다. 돌아가던 중이면 바로 시작됩니다. 단축키 N">
+          <button className={`btn ${size}`} onClick={() => send({ type: "playback:next", payload: {} })} disabled={!hasTimers}>
+            다음 ⏭
+          </button>
+        </Tooltip>
         {!compact && (
           <>
-            <button className={`btn ${size}`} onClick={() => send({ type: "playback:reset", payload: {} })} disabled={!hasTimers} title="리셋 (R)">
-              ↺ 리셋
-            </button>
-            <button className={`btn ${size}`} onClick={() => send({ type: "playback:stop", payload: {} })} disabled={!hasTimers} title="정지 (활성 타이머 해제)">
-              ■ 정지
-            </button>
+            <Tooltip text="지금 세션을 처음 길이로 되돌립니다. 단축키 R">
+              <button className={`btn ${size}`} onClick={() => send({ type: "playback:reset", payload: {} })} disabled={!hasTimers}>
+                ↺ 리셋
+              </button>
+            </Tooltip>
+            <Tooltip text="타이머를 멈추고 세션 선택도 풉니다. 뷰어에는 --:--가 뜹니다">
+              <button className={`btn ${size}`} onClick={() => send({ type: "playback:stop", payload: {} })} disabled={!hasTimers}>
+                ■ 정지
+              </button>
+            </Tooltip>
           </>
         )}
       </div>
       <div className="flex flex-wrap items-center justify-center gap-2">
         {ADJUSTMENTS.map((a) => (
-          <button
-            key={a.deltaMs}
-            className={`btn tnum ${large ? "px-4 py-3" : "btn-sm"}`}
-            onClick={() => send({ type: "playback:adjust", payload: { deltaMs: a.deltaMs } })}
-            disabled={!hasTimers}
-          >
-            {a.label}
-          </button>
+          <Tooltip key={a.deltaMs} text={`남은 시간을 ${a.label.replace("−", "")} ${a.deltaMs < 0 ? "줄입니다" : "늘립니다"}. 진행 중에도 바로 반영됩니다`}>
+            <button
+              className={`btn tnum ${large ? "px-4 py-3" : "btn-sm"}`}
+              onClick={() => send({ type: "playback:adjust", payload: { deltaMs: a.deltaMs } })}
+              disabled={!hasTimers}
+            >
+              {a.label}
+            </button>
+          </Tooltip>
         ))}
       </div>
     </div>
