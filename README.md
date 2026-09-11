@@ -4,12 +4,21 @@
 
 ## 배포 (Railway)
 
-1. Railway에서 New Project → Deploy from GitHub repo → 이 저장소 선택. `Dockerfile`과 `railway.json`을 자동으로 읽는다.
-2. 서비스 → Variables는 기본값으로 충분하다. (`PORT`는 Railway가 넣어주고, `DATA_DIR=/data`는 Dockerfile에 있음)
-3. 서비스 → Volumes → Add Volume, Mount path `/data`. 재배포해도 방이 유지되도록.
-4. Settings → Networking → Custom Domain에 도메인 입력 → 알려주는 CNAME을 DNS에 추가. 몇 분 뒤 HTTPS까지 자동.
+현재 https://present-controller-production.up.railway.app 에 떠 있다. GitHub 연동 없이 CLI로 이 폴더를 직접 올리는 방식.
 
-환경변수는 `.env.example` 참고. 공개 엔드포인트(방 생성, 청중 질문)에는 IP당 속도 제한이 걸려 있고, 방 개수는 `MAX_ROOMS`를 넘으면 가장 오래 쉰 방부터 정리된다.
+```bash
+npx @railway/cli login        # 최초 1회, 브라우저 승인
+npx @railway/cli link         # 최초 1회, 프로젝트/서비스 선택
+npx @railway/cli up --ci      # 빌드 + 배포. 코드 바꿀 때마다 실행
+```
+
+서비스 설정 (이미 돼 있음. 새로 만들 때 참고):
+- Volume: mount path `/data`. 방 스냅샷(SQLite)이 여기 남아 재배포해도 유지된다
+- Variables: `RAILWAY_RUN_UID=0`. Railway 볼륨은 root 소유로 마운트되므로 컨테이너도 root로 돈다
+- `PORT`는 Railway가 넣어주고 `DATA_DIR=/data`는 Dockerfile에 있다
+- 커스텀 도메인: Settings → Networking → Custom Domain에 입력 → 알려주는 CNAME을 DNS에 추가
+
+공개 엔드포인트(방 생성, 청중 질문)에는 IP당 속도 제한이 걸려 있고, 방 개수는 `MAX_ROOMS`를 넘으면 가장 오래 쉰 방부터 정리된다. 환경변수는 `.env.example` 참고.
 
 ## 실행
 
