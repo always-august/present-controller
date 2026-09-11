@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Footer } from "../components/Footer";
 
 export function AskView({ roomId }: { roomId: string }) {
   const [text, setText] = useState("");
@@ -23,7 +24,8 @@ export function AskView({ roomId }: { roomId: string }) {
   };
 
   return (
-    <main className="flex flex-1 items-center justify-center p-6">
+    <main className="flex flex-1 flex-col">
+      <div className="flex flex-1 items-center justify-center p-6">
       <form
         className="card w-full max-w-md space-y-4 p-5"
         onSubmit={(e) => {
@@ -45,6 +47,8 @@ export function AskView({ roomId }: { roomId: string }) {
         {state === "sent" && <p className="text-sm text-ok">질문이 전달되었습니다.</p>}
         {state === "error" && <p className="text-sm text-danger">전송에 실패했습니다. 다시 시도해 주세요.</p>}
       </form>
+      </div>
+      <Footer />
     </main>
   );
 }

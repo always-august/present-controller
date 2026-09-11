@@ -5,6 +5,7 @@ import { BrandMark } from "../components/BrandMark";
 import { ConnectionBadge } from "../components/ConnectionBadge";
 import { CsvImportDialog } from "../components/CsvImportDialog";
 import { CurrentTimerCard } from "../components/CurrentTimerCard";
+import { IntroBar } from "../components/IntroBar";
 import { MessagePanel } from "../components/MessagePanel";
 import { RoomGate } from "../components/RoomGate";
 import { SettingsDialog } from "../components/SettingsDialog";
@@ -56,7 +57,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
 
   return (
     <RoomGate requireController>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col lg:h-screen">
         <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-white/80 px-4 py-2 backdrop-blur-md">
           <BrandMark />
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
@@ -80,14 +81,17 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           </Tooltip>
         </header>
 
-        <main className="grid flex-1 gap-4 bg-panel-2 p-4 lg:grid-cols-[320px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
-          <section className="min-h-[300px] lg:h-[calc(100vh-80px)]">
+        <div className="bg-panel-2 pt-4">
+          <IntroBar />
+        </div>
+        <main className="grid flex-1 gap-4 bg-panel-2 px-4 pb-4 lg:min-h-0 lg:grid-cols-[320px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
+          <section className="min-h-[300px] lg:min-h-0">
             <TimerList onEdit={(t) => setDialog({ edit: t })} onAdd={() => setDialog({ edit: null })} onImport={() => setDialog("csv")} />
           </section>
-          <section className="lg:h-[calc(100vh-80px)]">
+          <section className="lg:min-h-0 lg:overflow-y-auto">
             <CurrentTimerCard large />
           </section>
-          <section className="min-h-[400px] lg:h-[calc(100vh-80px)]">
+          <section className="min-h-[400px] lg:min-h-0">
             <MessagePanel />
           </section>
         </main>

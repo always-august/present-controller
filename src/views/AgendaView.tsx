@@ -1,5 +1,6 @@
 "use client";
 import { ConnectionBadge } from "../components/ConnectionBadge";
+import { Footer } from "../components/Footer";
 import { RoomGate } from "../components/RoomGate";
 import { useCountdown } from "../hooks/useCountdown";
 import { useRoomConnection } from "../hooks/useRoomConnection";
@@ -79,6 +80,7 @@ export function AgendaView({ roomId }: { roomId: string }) {
           })}
           {timers.length === 0 && <li className="p-6 text-center text-sm text-muted">등록된 세션이 없습니다.</li>}
         </ol>
+        <Footer className="mt-8" />
       </div>
     </RoomGate>
   );
