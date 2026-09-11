@@ -24,5 +24,4 @@ COPY --from=build --chown=node:node /app/shared ./shared
 COPY --from=build --chown=node:node /app/next.config.ts /app/tsconfig.json ./
 USER node
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- http://127.0.0.1:3000/ >/dev/null || exit 1
 CMD ["npx", "tsx", "server/index.ts"]
