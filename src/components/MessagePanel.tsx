@@ -4,7 +4,7 @@ import type { Message, MessageColor } from "../../shared/types";
 import { EMPTY_MESSAGES, useRoomStore } from "../store/room";
 
 const COLORS: { value: MessageColor; label: string; className: string }[] = [
-  { value: "white", label: "흰색", className: "bg-white" },
+  { value: "white", label: "흰색", className: "bg-white border-line" },
   { value: "yellow", label: "노랑", className: "bg-warn" },
   { value: "red", label: "빨강", className: "bg-danger" },
   { value: "green", label: "초록", className: "bg-ok" },
@@ -24,10 +24,10 @@ function loadPresets(): string[] {
 }
 
 const TEXT_COLOR: Record<MessageColor, string> = {
-  white: "text-white",
-  yellow: "text-warn",
-  red: "text-danger",
-  green: "text-ok",
+  white: "text-ink",
+  yellow: "text-warn-ink",
+  red: "text-danger-ink",
+  green: "text-ok-ink",
 };
 
 export function MessagePanel() {
@@ -63,7 +63,7 @@ export function MessagePanel() {
     <div className="card flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <h2 className="text-sm font-semibold">
-          메시지 {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/20 px-1.5 text-xs text-ok">{visibleCount} 표시 중</span>}
+          메시지 {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
         </h2>
         {visibleCount > 0 && (
           <button
@@ -96,7 +96,7 @@ export function MessagePanel() {
                 type="button"
                 title={c.label}
                 onClick={() => setColor(c.value)}
-                className={`h-6 w-6 rounded-full border-2 ${c.className} ${color === c.value ? "border-white ring-2 ring-accent" : "border-transparent opacity-60"}`}
+                className={`h-6 w-6 rounded-full border ${c.className} ${color === c.value ? "ring-2 ring-accent ring-offset-2 ring-offset-panel" : "border-line opacity-70 hover:opacity-100"}`}
               />
             ))}
           </div>
@@ -117,13 +117,13 @@ export function MessagePanel() {
         </div>
         <div className="flex flex-wrap gap-1">
           {presets.map((p) => (
-            <span key={p} className="group inline-flex items-center overflow-hidden rounded-md border border-line bg-panel-2 text-xs">
-              <button type="button" className="px-2 py-1 hover:bg-[#252b3c]" onClick={() => show(p)} title="바로 표시">
+            <span key={p} className="group inline-flex items-center overflow-hidden rounded-full border border-transparent bg-panel-2 text-xs font-medium text-subtext transition hover:border-line">
+              <button type="button" className="px-3 py-1.5 hover:text-ink" onClick={() => show(p)} title="바로 표시">
                 {p}
               </button>
               <button
                 type="button"
-                className="hidden px-1.5 py-1 text-muted hover:text-danger group-hover:block"
+                className="hidden pr-2.5 py-1.5 text-muted hover:text-danger group-hover:block"
                 onClick={() => savePresets(presets.filter((x) => x !== p))}
                 title="프리셋 삭제"
               >
@@ -160,7 +160,7 @@ function MessageRow({ m }: { m: Message }) {
   return (
     <div className={`mb-1 flex items-center gap-2 rounded-lg px-2 py-1.5 ${m.visible ? "bg-ok/10" : "hover:bg-panel-2"}`}>
       <button
-        className={`shrink-0 rounded px-2 py-1 text-xs font-medium ${m.visible ? "bg-ok text-black" : "bg-panel-2 text-muted"}`}
+        className={`shrink-0 rounded px-2 py-1 text-xs font-medium ${m.visible ? "bg-ok text-white" : "bg-panel-2 text-subtext hover:text-ink"}`}
         onClick={() => send({ type: "message:toggle", payload: { id: m.id } })}
         title={m.visible ? "숨기기" : "표시"}
       >

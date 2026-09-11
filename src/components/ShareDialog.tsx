@@ -42,7 +42,7 @@ function LinkCard({ link, url }: { link: LinkDef; url: string }) {
 
   useEffect(() => {
     if (!url) return;
-    QRCode.toDataURL(url, { margin: 1, width: 160, color: { dark: "#ffffff", light: "#00000000" } })
+    QRCode.toDataURL(url, { margin: 1, width: 160, color: { dark: "#191f28", light: "#ffffff" } })
       .then(setQr)
       .catch(() => setQr(""));
   }, [url]);
@@ -58,12 +58,12 @@ function LinkCard({ link, url }: { link: LinkDef; url: string }) {
   };
 
   return (
-    <div className="flex gap-3 rounded-lg border border-line bg-panel-2 p-3">
-      {qr ? <img src={qr} alt="" className="h-20 w-20 shrink-0 rounded bg-black/40" /> : <div className="h-20 w-20 shrink-0" />}
+    <div className="flex gap-3 rounded-xl border border-line bg-panel-2 p-3">
+      {qr ? <img src={qr} alt="" className="h-20 w-20 shrink-0 rounded-lg border border-line bg-white" /> : <div className="h-20 w-20 shrink-0" />}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{link.label}</span>
-          {link.secret && <span className="rounded bg-danger/20 px-1 text-[10px] text-danger">비밀키 포함</span>}
+          {link.secret && <span className="rounded-full bg-danger/10 px-1.5 py-0.5 text-[10px] font-medium text-danger-ink">비밀키 포함</span>}
         </div>
         <p className="text-xs text-muted">{link.desc}</p>
         <div className="mt-2 flex items-center gap-1">

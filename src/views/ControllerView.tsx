@@ -57,7 +57,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
   return (
     <RoomGate requireController>
       <div className="flex min-h-screen flex-col">
-        <header className="flex items-center gap-3 border-b border-line px-4 py-2">
+        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-white/80 px-4 py-2 backdrop-blur-md">
           <BrandMark />
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>
           <ConnectionBadge />
@@ -73,14 +73,14 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           </button>
         </header>
 
-        <main className="grid flex-1 gap-3 p-3 lg:grid-cols-[320px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
-          <section className="min-h-[300px] lg:h-[calc(100vh-64px)]">
+        <main className="grid flex-1 gap-4 bg-panel-2 p-4 lg:grid-cols-[320px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
+          <section className="min-h-[300px] lg:h-[calc(100vh-80px)]">
             <TimerList onEdit={(t) => setDialog({ edit: t })} onAdd={() => setDialog({ edit: null })} onImport={() => setDialog("csv")} />
           </section>
-          <section className="lg:h-[calc(100vh-64px)] lg:overflow-y-auto">
+          <section className="lg:h-[calc(100vh-80px)] lg:overflow-y-auto">
             <CurrentTimerCard large />
           </section>
-          <section className="min-h-[400px] lg:h-[calc(100vh-64px)]">
+          <section className="min-h-[400px] lg:h-[calc(100vh-80px)]">
             <MessagePanel />
           </section>
         </main>

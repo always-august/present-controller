@@ -12,7 +12,7 @@ export function ModeratorView({ roomId, controllerKey }: { roomId: string; contr
   const timer = useRoomStore(selectActiveTimer);
   const playback = useRoomStore((s) => s.room?.playback);
   const { remainingMs, phase } = useCountdown(playback, timer);
-  const color = phase === "over" ? "text-danger" : phase === "wrapup" ? "text-warn" : "text-white";
+  const color = phase === "over" ? "text-danger-ink" : phase === "wrapup" ? "text-warn-ink" : "text-ink";
 
   return (
     <RoomGate requireController>

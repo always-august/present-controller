@@ -21,7 +21,7 @@ export function ConnectionBadge({ minimal = false }: { minimal?: boolean }) {
   }
 
   return (
-    <div className="flex items-center gap-1.5 text-xs text-muted" title={`시계 보정 ${offset > 0 ? "+" : ""}${Math.round(offset)}ms`}>
+    <div className="flex items-center gap-1.5 text-xs text-subtext" title={`시계 보정 ${offset > 0 ? "+" : ""}${Math.round(offset)}ms`}>
       <span className={`h-2 w-2 rounded-full ${connected ? "bg-ok" : "animate-pulse bg-danger"}`} />
       {connected ? "연결됨" : everConnected ? "재연결 중…" : "연결 중…"}
     </div>

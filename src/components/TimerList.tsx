@@ -68,7 +68,7 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
                 setOverId(null);
               }}
               className={`group mb-1 flex cursor-grab items-center gap-2 rounded-lg border px-2 py-2 transition ${
-                active ? "border-accent/60 bg-accent/10" : "border-transparent hover:bg-panel-2"
+                active ? "border-accent/50 bg-accent/8" : "border-transparent hover:bg-panel-2"
               } ${overId === t.id && dragId !== t.id ? "border-t-2 border-t-accent" : ""} ${dragId === t.id ? "opacity-40" : ""}`}
             >
               <span className="w-5 shrink-0 text-center text-xs text-muted tnum">{i + 1}</span>

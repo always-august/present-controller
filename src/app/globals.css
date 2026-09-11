@@ -1,17 +1,44 @@
 @import "tailwindcss";
 
+/* Pretendard(아임웹 기술 블로그와 동일한 웹폰트)는 layout.tsx의 <link>로 로드한다.
+   Tailwind v4 @import 뒤에는 @import url()을 둘 수 없기 때문. */
+
+/*
+ * 디자인 토큰 — 아임웹 기술 블로그(tech.imweb.me) 톤앤매너를 따른다.
+ * 차분한 흑백 바탕 + 강한 포커스 블루. 강조 색상(accent/warn/danger/ok)은 마부 고유값 유지.
+ */
 @theme inline {
-  --font-sans: var(--font-geist-sans), "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --color-surface: #0b0d12;
-  --color-panel: #141821;
-  --color-panel-2: #1c2130;
-  --color-line: #2a3040;
-  --color-muted: #8b93a7;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+    "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", "D2Coding", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* 바탕 */
+  --color-base: #ffffff; /* 페이지 배경 */
+  --color-panel: #ffffff; /* 카드 */
+  --color-panel-2: #f9fafb; /* 카드 안의 옅은 면, 칩, 호버 */
+  --color-surface: #ffffff; /* 입력창 */
+  --color-line: #e5e8eb;
+
+  /* 글자 */
+  --color-ink: #191f28;
+  --color-subtext: #4e5968;
+  --color-muted: #8b95a1;
+
+  /* 강조 — 마부 고유 (유지) */
   --color-accent: #4f8cff;
+  --color-accent-dark: #3f7af0;
   --color-warn: #f5c542;
   --color-danger: #ff4d4f;
   --color-ok: #3ddc84;
+  /* 밝은 배경 위의 작은 글자용. 색상 계열은 같고 명도만 낮춤 */
+  --color-warn-ink: #b7860b;
+  --color-danger-ink: #d9363e;
+  --color-ok-ink: #1f9d5a;
+
+  --radius-card: 16px;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover: 0 1px 2px rgba(15, 23, 42, 0.06), 0 10px 32px rgba(15, 23, 42, 0.08);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html,
@@ -20,10 +47,14 @@ body {
 }
 
 body {
-  background: var(--color-surface);
-  color: #e8ebf2;
+  background: var(--color-base);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "ss02", "cv11";
+  word-break: keep-all;
 }
 
 /* 숫자 자릿수가 바뀌어도 폭이 흔들리지 않도록 */
@@ -48,6 +79,17 @@ body {
   animation: fade-out 5s ease-in forwards;
 }
 
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 0.25s var(--ease-smooth);
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in { animation: none; }
+}
+
 .no-cursor,
 .no-cursor * {
   cursor: none !important;
@@ -58,32 +100,43 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-/* 공통 컨트롤 */
+/* ── 공통 컴포넌트 ─────────────────────────────────────────────────────── */
+
 .btn {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-panel-2 px-3 py-2 text-sm font-medium text-white transition hover:bg-[#252b3c] active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none select-none;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-line bg-panel px-3.5 py-2 text-sm font-medium text-ink transition-all duration-200 ease-[var(--ease-smooth)] hover:bg-panel-2 hover:border-[#d5d9de] active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none select-none;
 }
 .btn-primary {
-  @apply border-accent bg-accent hover:bg-[#3f7af0];
+  @apply border-accent bg-accent text-white hover:bg-accent-dark hover:border-accent-dark shadow-[0_4px_14px_rgba(79,140,255,0.28)];
 }
 .btn-danger {
-  @apply border-danger/60 bg-danger/20 hover:bg-danger/30;
+  @apply border-danger/30 bg-danger/10 text-danger-ink hover:bg-danger/15;
 }
 .btn-ghost {
-  @apply border-transparent bg-transparent hover:bg-panel-2;
+  @apply border-transparent bg-transparent text-subtext hover:bg-panel-2 hover:text-ink;
 }
 .btn-sm {
-  @apply px-2 py-1 text-xs;
+  @apply rounded-lg px-2.5 py-1.5 text-xs;
 }
+
 .input {
-  @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-white outline-none placeholder:text-muted focus:border-accent;
+  @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-accent focus:ring-4 focus:ring-accent/15 disabled:bg-panel-2 disabled:text-muted;
 }
 .label {
-  @apply mb-1 block text-xs font-medium text-muted;
+  @apply mb-1.5 block text-xs font-medium text-subtext;
 }
+
 .card {
-  @apply rounded-xl border border-line bg-panel;
+  @apply rounded-[var(--radius-card)] border border-line bg-panel shadow-[var(--shadow-card)];
+}
+
+/* 프리셋·태그용 알약 칩 (블로그의 .chip) */
+.chip {
+  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-transparent bg-panel-2 px-3 py-1.5 text-xs font-medium text-subtext transition-all duration-200 hover:border-line hover:text-ink;
+}
+.chip.is-active {
+  @apply border-ink bg-ink text-white;
 }
 
 kbd {
-  @apply rounded border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[11px];
+  @apply rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[11px] text-subtext;
 }

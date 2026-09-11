@@ -2,9 +2,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { Phase } from "../hooks/useCountdown";
 
-const PHASE_COLOR: Record<Phase, string> = {
-  idle: "#ffffff",
-  normal: "#ffffff",
+// idle/normal은 부모 글자색을 그대로 쓴다 (컨트롤러는 어두운 잉크, 뷰어는 흰색)
+const PHASE_COLOR: Record<Phase, string | undefined> = {
+  idle: undefined,
+  normal: undefined,
   wrapup: "#f5c542",
   over: "#ff4d4f",
 };

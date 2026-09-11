@@ -24,7 +24,7 @@ export function CurrentTimerCard({ large = false, compact = false }: { large?: b
           {timer ? (
             <>
               <span className="font-medium">{timer.title || "제목 없음"}</span>
-              {timer.speaker && <span className="ml-2 text-muted">{timer.speaker}</span>}
+              {timer.speaker && <span className="ml-2 text-subtext">{timer.speaker}</span>}
             </>
           ) : (
             <span className="text-muted">활성 타이머 없음</span>
@@ -32,7 +32,7 @@ export function CurrentTimerCard({ large = false, compact = false }: { large?: b
         </div>
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${
-            status === "running" ? "bg-ok/20 text-ok" : status === "paused" ? "bg-warn/20 text-warn" : "bg-panel-2 text-muted"
+            status === "running" ? "bg-ok/15 text-ok-ink" : status === "paused" ? "bg-warn/20 text-warn-ink" : "bg-panel-2 text-subtext"
           }`}
         >
           {STATUS_LABEL[status]}
@@ -43,7 +43,7 @@ export function CurrentTimerCard({ large = false, compact = false }: { large?: b
       <div className={large ? "h-[38vh] min-h-40" : "h-36"}>
         <BigTime text={timer ? text : "--:--"} phase={phase} />
       </div>
-      <div className="mb-4 h-1 w-full overflow-hidden rounded bg-panel-2">
+      <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-panel-2">
         <div
           className={`h-full transition-[width] duration-200 ${phase === "over" ? "bg-danger" : phase === "wrapup" ? "bg-warn" : "bg-accent"}`}
           style={{ width: `${progress * 100}%` }}
@@ -51,8 +51,8 @@ export function CurrentTimerCard({ large = false, compact = false }: { large?: b
       </div>
       <PlaybackControls large={large} compact={compact} />
       {timer?.notes && !compact && (
-        <div className="mt-4 rounded-lg bg-panel-2 p-3 text-xs text-muted whitespace-pre-wrap">
-          <span className="mb-1 block font-medium text-white/70">메모 (뷰어 미노출)</span>
+        <div className="mt-4 rounded-xl bg-panel-2 p-3 text-xs text-subtext whitespace-pre-wrap">
+          <span className="mb-1 block font-medium text-subtext">메모 (뷰어 미노출)</span>
           {timer.notes}
         </div>
       )}

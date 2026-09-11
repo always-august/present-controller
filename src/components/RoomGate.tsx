@@ -32,7 +32,7 @@ export function RoomGate({ children, requireController = false }: { children: Re
       <Center>
         <h1 className="text-xl font-semibold">제어 권한이 없습니다</h1>
         <p className="mt-2 text-sm text-muted">
-          이 화면은 <code className="rounded bg-panel-2 px-1">?key=</code> 비밀키가 포함된 링크로만 열 수 있습니다.
+          이 화면은 <code className="rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-xs">?key=</code> 비밀키가 포함된 링크로만 열 수 있습니다.
         </p>
         <Link href={`/r/${room.id}/viewer`} className="btn mt-4">
           뷰어로 열기

@@ -149,7 +149,7 @@ export function ViewerView({ roomId, options }: { roomId: string; options: Viewe
         </div>
 
         {/* 중앙: 숫자 */}
-        <div className={`min-h-0 flex-1 px-[3vw] ${hasMessages ? "pb-[2vh]" : "pb-[6vh]"}`}>
+        <div className={`min-h-0 flex-1 px-[3vw] text-white ${hasMessages ? "pb-[2vh]" : "pb-[6vh]"}`}>
           <BigTime text={timeText} phase={timer?.mode === "clock" ? "normal" : phase} />
         </div>
 

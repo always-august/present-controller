@@ -29,7 +29,7 @@ export function OperatorView({ roomId, controllerKey }: { roomId: string; contro
           )}
           {nextTimer && (
             <span className="ml-2">
-              다음: <span className="text-white">{nextTimer.title || "제목 없음"}</span>
+              다음: <span className="text-ink">{nextTimer.title || "제목 없음"}</span>
             </span>
           )}
         </div>

@@ -36,7 +36,7 @@ export default function Home() {
           <h1>
             <BrandMark size="lg" />
           </h1>
-          <p className="mt-2 text-base font-medium text-white/80">발표자 타이머 컨트롤러</p>
+          <p className="mt-2 text-base font-medium text-subtext">발표자 타이머 컨트롤러</p>
           <p className="mt-4 text-sm leading-relaxed text-muted">
             방을 만들면 바로 링크가 발급됩니다.
             <br />
@@ -44,7 +44,7 @@ export default function Home() {
           </p>
         </div>
         <form
-          className="card p-5 space-y-4"
+          className="card p-6 space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             void createRoom();
@@ -72,7 +72,7 @@ export default function Home() {
           </button>
         </form>
         <GuideDialog open={guideOpen} onClose={() => setGuideOpen(false)} />
-        <ul className="mt-6 space-y-1 text-xs text-muted">
+        <ul className="mt-6 space-y-1.5 text-xs text-muted">
           <li>· 가입 없이 즉시 사용. 컨트롤러 링크(비밀키 포함)는 운영자만 보관하세요.</li>
           <li>· 뷰어는 네트워크가 끊겨도 로컬 계산으로 계속 카운트합니다.</li>
           <li>· 24시간 동안 사용하지 않은 방은 자동 정리됩니다.</li>

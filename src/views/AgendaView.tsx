@@ -26,7 +26,7 @@ export function AgendaView({ roomId }: { roomId: string }) {
 
   const activeIndex = timers.findIndex((t) => t.id === active?.id);
   const status = room?.playback.status ?? "idle";
-  const color = phase === "over" ? "text-danger" : phase === "wrapup" ? "text-warn" : "text-white";
+  const color = phase === "over" ? "text-danger-ink" : phase === "wrapup" ? "text-warn-ink" : "text-ink";
 
   return (
     <RoomGate>
@@ -60,7 +60,7 @@ export function AgendaView({ roomId }: { roomId: string }) {
               <li
                 key={t.id}
                 className={`flex items-center gap-3 rounded-lg border px-3 py-2 ${
-                  state === "current" ? "border-accent/60 bg-accent/10" : state === "done" ? "border-transparent opacity-50" : "border-line"
+                  state === "current" ? "border-accent/50 bg-accent/8" : state === "done" ? "border-transparent opacity-50" : "border-line bg-panel"
                 }`}
               >
                 <span className="w-6 text-center text-xs text-muted tnum">{state === "done" ? "✓" : i + 1}</span>
