@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Presenter Timer
 
-## Getting Started
+원격 제어형 발표 타이머. 운영자가 노트북/휴대폰에서 타이머와 메시지를 제어하고, 발표자는 공유 링크로 열린 풀스크린 화면을 보면서 발표합니다. stagetimer.io 와 같은 구조입니다.
 
-First, run the development server:
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+프로덕션:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start          # NODE_ENV=production, PORT / HOST 환경변수로 변경 가능
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+다른 기기에서 접속하려면 `localhost` 대신 이 컴퓨터의 LAN IP(예: `http://192.168.0.10:3000`)로 열어야 합니다. 컨트롤러의 **링크 공유** 버튼이 각 화면의 링크와 QR 코드를 보여줍니다.
 
-## Learn More
+## 화면
 
-To learn more about Next.js, take a look at the following resources:
+| 경로 | 역할 | 접근 |
+| --- | --- | --- |
+| `/` | 방 생성 | 공개 |
+| `/r/:roomId?key=…` | 컨트롤러 — 타이머 CRUD·드래그 정렬·재생 제어·메시지·CSV 임포트·설정·링크 공유 | 비밀키 |
+| `/r/:roomId/viewer` | 발표자용 풀스크린 타이머 | 공개 |
+| `/r/:roomId/agenda` | 러닝오더와 진행 상황 | 공개 |
+| `/r/:roomId/ask` | 청중 질문 제출 폼 | 공개 |
+| `/r/:roomId/moderator?key=…` | 메시지 전용 제어 | 비밀키 |
+| `/r/:roomId/operator?key=…` | 시작/일시정지/이전/다음/가감만 있는 단순 제어 | 비밀키 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+뷰어 쿼리 옵션: `?chroma=green|blue|magenta|<hex>` (크로마키 배경), `?hideTitle=1`, `?hideSpeaker=1`, `?hideClock=1`, `?hideProgress=1`, `?hideMessages=1`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+컨트롤러 단축키: `Space` 재생/일시정지 · `N` 다음 · `P` 이전 · `R` 리셋
 
-## Deploy on Vercel
+## 동작 원리
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **서버는 틱을 보내지 않습니다.** 상태가 바뀔 때만 `deadline`(epoch ms) 기준 `PlaybackState`를 전파하고, 각 클라이언트가 `requestAnimationFrame`으로 로컬 렌더링합니다.
+- **시계 보정**: 접속 직후 5회 ping → 왕복 지연이 가장 짧은 샘플의 offset 채택, 이후 30초마다 갱신.
+- **뷰어는 멈추지 않습니다.** 연결이 끊겨도 마지막 `deadline`으로 계속 계산하고, 지수 백오프(최대 5초)로 재연결한 뒤 `room:state`로 덮어씁니다.
+- **자동 연결(chainNext)과 예약 시작**은 서버 `setTimeout`으로 처리하므로 뷰어만 열려 있어도 동작합니다.
+- **영속화**: 인메모리 Map이 단일 진실. 5초마다 변경된 방을 SQLite(`data/rooms.db`, Node 내장 `node:sqlite`)에 스냅샷. 재시작 시 진행 중이던 타이머는 일시정지 상태로 복구됩니다. 24시간 미사용 방은 정리.
+- **종료 안내**: 타이머마다 "종료 안내 시점"(wrapUp)을 두면 그 시간 이하로 남았을 때 노란색 전환 + 알림음 + 배너, 0 도달 시 빨간색 + 알림음 + 배너, 이후 `-00:17` 형식으로 초과 시간 표시.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## REST API
+
+WebSocket으로 모든 조작이 가능하지만 Stream Deck 등 외부 도구용으로 최소 REST를 제공합니다.
+
+```
+POST   /api/rooms                          → { roomId, controllerKey }
+GET    /api/rooms/:id                      공개 상태 조회
+POST   /api/rooms/:id/start?key=           body: { timerId? }
+POST   /api/rooms/:id/pause?key=
+POST   /api/rooms/:id/toggle?key=
+POST   /api/rooms/:id/reset?key=
+POST   /api/rooms/:id/stop?key=
+POST   /api/rooms/:id/next?key=   /prev
+POST   /api/rooms/:id/adjust?key=          body: { deltaMs }
+POST   /api/rooms/:id/message?key=         body: { text, color?, flash?, bold?, visible? }
+DELETE /api/rooms/:id/message/:msgId?key=
+POST   /api/rooms/:id/questions            body: { text }  (공개, 청중 질문)
+```
+
+`key`는 쿼리스트링 또는 JSON body의 `key` 필드로 전달합니다.
+
+## 구조
+
+```
+server/          커스텀 Node 서버 (Next + ws + REST, 한 포트)
+  index.ts       HTTP/업그레이드 라우팅
+  engine.ts      재생 상태 전환, 타이머/메시지 CRUD, 서버 스케줄러
+  ws.ts          WebSocket 세션·권한·브로드캐스트
+  rest.ts        REST 핸들러
+  store.ts       인메모리 Map + SQLite 스냅샷 + 만료
+shared/types.ts  도메인 모델과 이벤트 타입 (서버·클라이언트 공유)
+src/
+  store/room.ts  Zustand 스토어 (WS 수신 → 상태 반영)
+  lib/socket.ts  재연결·시계 보정
+  hooks/         useCountdown(rAF), useWakeLock, useChime
+  views/         역할별 화면
+  components/    컨트롤러 UI 조각
+```
+
+## 수동 검증 체크리스트
+
+1. 기기 3대(노트북·휴대폰·태블릿) 동시 접속 후 표시 시간 일치
+2. 뷰어 새로고침 후 진행 상태 즉시 복원
+3. 타이머 진행 중 비행기모드 30초 후 복귀 시 시간 정확도
+4. 0을 지난 뒤 초과 시간이 음수로 계속 증가
+5. 컨트롤러 2개를 동시에 열고 한쪽 조작이 다른 쪽에 반영
+6. 브라우저 탭을 백그라운드로 보낸 뒤 복귀 시 시간 점프 없음
+7. 아이패드 장시간 방치 시 화면 유지(Wake Lock / nosleep 폴백)
