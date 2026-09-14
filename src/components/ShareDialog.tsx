@@ -29,49 +29,28 @@ export function ShareDialog({ open, onClose, roomId, controllerKey }: { open: bo
       ],
     },
     {
-      label: "아젠다",
-      desc: "전체 순서와 지금 어디까지 왔는지. 누구나 열 수 있어요",
-      path: `/r/${roomId}/agenda`,
-      help: ["대기실이나 로비 화면에 맞아요.", "지난 세션은 흐리게, 지금 세션은 파란 테두리로 표시돼요."],
-    },
-    {
       label: "청중 질문",
       desc: "청중이 질문을 적어 보내는 폼. 누구나 열 수 있어요",
       path: `/r/${roomId}/ask`,
-      help: ["들어온 질문은 컨트롤러 메시지 패널에 쌓여요.", "표시를 누르면 뷰어에 올라가요."],
+      help: ["들어온 질문은 어드민 메시지 패널에 쌓여요.", "표시를 누르면 뷰어에 올라가요."],
     },
     {
-      label: "오퍼레이터",
-      desc: "시작, 일시정지, 이전, 다음, 시간 가감만 있는 화면",
-      path: `/r/${roomId}/operator${k}`,
-      secret: true,
-      help: ["휴대폰을 한 손에 들고 쓰기 좋아요.", "타이머 편집이나 메시지는 컨트롤러에서 해요."],
-    },
-    {
-      label: "모더레이터",
-      desc: "메시지만 보내는 화면",
-      path: `/r/${roomId}/moderator${k}`,
-      secret: true,
-      help: ["사회자나 무대 감독이 써요.", "타이머는 건드리지 않고 메시지만 띄우고 내려요."],
-    },
-    {
-      label: "컨트롤러",
-      desc: "전체 제어. 운영자만 가지고 있어야 해요",
+      label: "어드민",
+      desc: "지금 이 화면. 전체 제어. 운영자만 가지고 있어야 해요",
       path: `/r/${roomId}${k}`,
       secret: true,
-      help: ["이 주소를 아는 사람은 누구나 타이머를 조작할 수 있어요.", "컨트롤러를 여러 개 열어도 한쪽 조작이 다른 쪽에 바로 반영돼요."],
+      help: ["이 주소를 아는 사람은 누구나 타이머를 조작할 수 있어요.", "어드민을 여러 개 열어도 한쪽 조작이 다른 쪽에 바로 반영돼요."],
     },
   ];
 
   return (
     <Modal open={open} onClose={onClose} title="출력 링크 공유" wide>
       <p className="mb-4 flex items-center text-xs text-muted">
-        같은 Wi‑Fi에 있는 기기는 서버가 켜진 컴퓨터의 IP 주소로 들어오면 돼요. QR을 찍는 게 제일 빨라요.
+        링크를 복사해 보내거나, 다른 기기에서 QR을 찍으면 바로 열려요.
         <HelpDot
           content={
             <HelpList
               items={[
-                <><code className="bg-white/15 text-white">localhost</code> 주소는 이 컴퓨터에서만 열려요.</>,
                 "비밀키가 붙은 링크는 운영자끼리만 주고받으세요.",
                 "24시간 동안 아무도 쓰지 않은 방은 지워져요.",
               ]}

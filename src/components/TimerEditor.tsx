@@ -154,7 +154,7 @@ export function TimerEditor({ open, timer, onClose }: { open: boolean; timer: Ti
             <HelpDot text="0이 되는 순간 목록의 다음 세션이 이어서 시작돼요. 초과 시간은 생기지 않아요" />
           </label>
           <div className="col-span-2">
-            <label className="label">메모<HelpDot text="컨트롤러에서만 보여요. 뷰어와 아젠다에는 나오지 않아요" /></label>
+            <label className="label">메모<HelpDot text="어드민에서만 보여요. 뷰어에는 나오지 않아요" /></label>
             <textarea className="input min-h-20" value={form.notes} onChange={(e) => set("notes", e.target.value)} />
           </div>
         </div>

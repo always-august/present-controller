@@ -30,7 +30,7 @@ export function RoomGate({ children, requireController = false }: { children: Re
   if (requireController && role !== "controller") {
     return (
       <Center>
-        <h1 className="text-xl font-semibold">제어 권한이 없어요</h1>
+        <h1 className="text-xl font-semibold">어드민 권한이 없어요</h1>
         <p className="mt-2 text-sm text-muted">
           이 화면은 <code className="rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-xs">?key=</code> 비밀키가 포함된 링크로만 열 수 있어요.
         </p>

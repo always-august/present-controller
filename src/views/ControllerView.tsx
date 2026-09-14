@@ -85,7 +85,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
               설정
             </button>
           </Tooltip>
-          <Tooltip text="뷰어, 아젠다, 오퍼레이터 링크와 QR 코드를 복사해요" side="bottom">
+          <Tooltip text="뷰어와 청중 질문 링크, QR 코드를 복사해요" side="bottom">
             <button className="btn btn-primary btn-sm" data-tour="share" onClick={() => setDialog("share")}>
               링크 공유
             </button>
