@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import TextThree from "@/components/ui/text-three";
 import { Footer } from "@/components/Footer";
@@ -63,6 +64,9 @@ export default function Home() {
           <button className="btn btn-primary w-full py-3 text-base" disabled={busy} type="submit">
             {busy ? "만드는 중…" : "방 만들기"}
           </button>
+          <Link href="/solo" className="btn w-full py-3 text-base">
+            혼자 발표하기
+          </Link>
           {error && <p className="text-sm text-danger">{error}</p>}
         </form>
         <div className="mt-6 space-y-2 text-center text-sm leading-relaxed text-muted">
