@@ -210,10 +210,10 @@ function SoloTimer({ settings, onExit }: { settings: SoloSettings; onExit: () =>
           reset();
           break;
         case "ArrowUp":
-          adjust(60_000);
+          adjust(e.shiftKey ? 30_000 : 60_000);
           break;
         case "ArrowDown":
-          adjust(-60_000);
+          adjust(e.shiftKey ? -30_000 : -60_000);
           break;
         case "Escape":
           if (document.fullscreenElement) void document.exitFullscreen();
@@ -302,12 +302,18 @@ function SoloTimer({ settings, onExit }: { settings: SoloSettings; onExit: () =>
           <button className={btn} onClick={() => adjust(-60_000)} title="1분 줄여요 (↓)">
             −1분
           </button>
+          <button className={btn} onClick={() => adjust(-30_000)} title="30초 줄여요 (Shift+↓)">
+            −30초
+          </button>
           <button
             className={`${btn} min-w-32 ${isRunning ? "bg-danger/80 hover:bg-danger" : "bg-accent hover:bg-accent-dark"}`}
             onClick={isRunning ? pause : start}
             aria-label={isRunning ? "일시정지 (Space)" : "시작 (Space)"}
           >
             {isRunning ? "❚❚ 일시정지" : playback.status === "paused" ? "▶ 재개" : "▶ 시작"}
+          </button>
+          <button className={btn} onClick={() => adjust(30_000)} title="30초 늘려요 (Shift+↑)">
+            +30초
           </button>
           <button className={btn} onClick={() => adjust(60_000)} title="1분 늘려요 (↑)">
             +1분
