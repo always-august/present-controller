@@ -78,11 +78,7 @@ export default function Home() {
           {error && <p className="text-sm text-danger">{error}</p>}
         </form>
         <div className="mt-6 space-y-2 text-center text-sm leading-relaxed text-muted">
-          <p>
-            방을 만들면 바로 링크가 발급돼요.
-            <br />
-            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 열어 주세요.
-          </p>
+          <p>방을 만들면 고유 링크가 발급돼요.</p>
           <p className="inline-flex items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1 text-xs text-subtext">
             <span aria-hidden>🖥</span>
             PC에서 사용을 권장드려요.
