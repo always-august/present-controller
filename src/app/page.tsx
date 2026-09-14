@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TextThree from "@/components/ui/text-three";
 import { Footer } from "@/components/Footer";
-import { HelpDot, HelpList } from "@/components/Tooltip";
 
 export default function Home() {
   const router = useRouter();
@@ -50,18 +49,6 @@ export default function Home() {
           <div>
             <label className="label" htmlFor="name">
               행사 이름 (선택)
-              <HelpDot
-                content={
-                  <HelpList
-                    title="시작하기"
-                    items={[
-                      "방 만들기를 누르면 바로 컨트롤러가 열려요. 가입은 없어요.",
-                      "컨트롤러 주소 끝의 ?key= 비밀키를 아는 사람은 누구나 조작할 수 있으니 운영자끼리만 주고받으세요.",
-                      "이름은 나중에 설정에서 바꿀 수 있어요.",
-                    ]}
-                  />
-                }
-              />
             </label>
             <input
               id="name"

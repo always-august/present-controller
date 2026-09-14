@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Message, MessageColor } from "../../shared/types";
 import { EMPTY_MESSAGES, useRoomStore } from "../store/room";
-import { HelpDot, HelpList, Tooltip } from "./Tooltip";
+import { Tooltip } from "./Tooltip";
 
 const COLORS: { value: MessageColor; label: string; className: string }[] = [
   { value: "white", label: "흰색", className: "bg-white border-line" },
@@ -65,20 +65,6 @@ export function MessagePanel() {
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <h2 className="flex items-center text-sm font-semibold">
           메시지
-          <HelpDot
-            content={
-              <HelpList
-                title="메시지"
-                items={[
-                  "입력창에 적고 표시를 누르면 뷰어 아래쪽에 바로 떠요.",
-                  "색상, 굵게, 깜빡임을 고를 수 있어요.",
-                  "자주 쓰는 문구는 프리셋 저장으로 등록해 두세요.",
-                  "한 번에 두 개까지 보여요. 띄우고 지워도 타이머는 그대로 가요.",
-                  "청중 질문 폼으로 들어온 질문도 여기 쌓여요. 표시를 누르면 뷰어에 올라가요.",
-                ]}
-              />
-            }
-          />
           {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
         </h2>
         {visibleCount > 0 && (

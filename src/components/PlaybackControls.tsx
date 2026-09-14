@@ -19,7 +19,7 @@ export function PlaybackControls({ compact = false, large = false }: { compact?:
 
   return (
     <div className="space-y-3">
-      <div className={`flex flex-wrap items-center justify-center gap-2 ${large ? "gap-3" : ""}`}>
+      <div className={`flex flex-wrap items-center justify-center gap-2 ${large ? "gap-3" : ""}`} data-tour="playback">
         <Tooltip text="앞 세션으로 넘어가요. 돌아가던 중이면 바로 시작돼요. 단축키 P">
           <button className={`btn ${size}`} onClick={() => send({ type: "playback:prev", payload: {} })} disabled={!hasTimers}>
             ⏮ 이전
@@ -54,7 +54,7 @@ export function PlaybackControls({ compact = false, large = false }: { compact?:
           </>
         )}
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-2" data-tour="adjust">
         {ADJUSTMENTS.map((a) => (
           <Tooltip key={a.deltaMs} text={`남은 시간을 ${a.label.replace("−", "")} ${a.deltaMs < 0 ? "줄여요" : "늘려요"}. 진행 중에도 바로 반영돼요`}>
             <button
