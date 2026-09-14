@@ -78,7 +78,7 @@ export function AgendaView({ roomId }: { roomId: string }) {
               </li>
             );
           })}
-          {timers.length === 0 && <li className="p-6 text-center text-sm text-muted">등록된 세션이 없습니다.</li>}
+          {timers.length === 0 && <li className="p-6 text-center text-sm text-muted">등록된 세션이 없어요.</li>}
         </ol>
         <Footer className="mt-8" />
       </div>

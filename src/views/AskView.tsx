@@ -35,17 +35,17 @@ export function AskView({ roomId }: { roomId: string }) {
       >
         <div>
           <h1 className="text-lg font-semibold">질문 보내기</h1>
-          <p className="text-xs text-muted">운영자가 확인 후 무대 화면에 띄울 수 있습니다.</p>
+          <p className="text-xs text-muted">운영자가 확인 후 무대 화면에 띄울 수 있어요.</p>
         </div>
-        <textarea className="input min-h-32" value={text} onChange={(e) => setText(e.target.value)} placeholder="질문을 입력하세요" maxLength={300} />
+        <textarea className="input min-h-32" value={text} onChange={(e) => setText(e.target.value)} placeholder="질문을 입력해 주세요" maxLength={300} />
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted tnum">{text.length}/300</span>
           <button className="btn btn-primary" type="submit" disabled={state === "sending" || !text.trim()}>
             {state === "sending" ? "보내는 중…" : "보내기"}
           </button>
         </div>
-        {state === "sent" && <p className="text-sm text-ok">질문이 전달되었습니다.</p>}
-        {state === "error" && <p className="text-sm text-danger">전송에 실패했습니다. 다시 시도해 주세요.</p>}
+        {state === "sent" && <p className="text-sm text-ok">질문이 전달되었어요.</p>}
+        {state === "error" && <p className="text-sm text-danger">전송에 실패했어요. 다시 시도해 주세요.</p>}
       </form>
       </div>
       <Footer />

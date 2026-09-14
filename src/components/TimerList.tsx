@@ -34,23 +34,23 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
               <HelpList
                 title="타이머 만들기"
                 items={[
-                  "+ 추가로 하나씩 넣거나 CSV로 한꺼번에 불러옵니다.",
-                  "항목을 누르면 편집 창이 열리고, 끌어다 놓으면 순서가 바뀝니다.",
-                  "▶를 누르면 그 세션으로 바꿔서 바로 시작합니다.",
-                  "종료 시 다음 타이머 자동 시작을 켜 두면 끝나는 순간 다음 세션으로 넘어갑니다.",
-                  "메모는 운영자 화면에만 보입니다.",
+                  "+ 추가로 하나씩 넣거나 CSV로 한꺼번에 불러와요.",
+                  "항목을 누르면 편집 창이 열리고, 끌어다 놓으면 순서가 바뀌어요.",
+                  "▶를 누르면 그 세션으로 바꿔서 바로 시작해요.",
+                  "종료 시 다음 타이머 자동 시작을 켜 두면 끝나는 순간 다음 세션으로 넘어가요.",
+                  "메모는 운영자 화면에만 보여요.",
                 ]}
               />
             }
           />
         </h2>
         <div className="flex gap-1">
-          <Tooltip text="CSV 파일이나 붙여넣은 표로 세션을 한꺼번에 넣습니다">
+          <Tooltip text="CSV 파일이나 붙여넣은 표로 세션을 한꺼번에 넣어요">
             <button className="btn btn-sm" onClick={onImport}>
               CSV
             </button>
           </Tooltip>
-          <Tooltip text="세션을 하나 추가합니다. 제목, 발표자, 길이, 종료 안내 시점을 정합니다">
+          <Tooltip text="세션을 하나 추가해요. 제목, 발표자, 길이, 종료 안내 시점을 정해요">
             <button className="btn btn-primary btn-sm" onClick={onAdd}>
               + 추가
             </button>
@@ -60,7 +60,7 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
       <ul className="flex-1 overflow-y-auto p-2">
         {timers.length === 0 && (
           <li className="p-6 text-center text-sm text-muted">
-            아직 세션이 없습니다.
+            아직 세션이 없어요.
             <br />
             + 추가나 CSV로 넣어 보세요.
           </li>
@@ -94,7 +94,7 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
               <button
                 className="min-w-0 flex-1 text-left"
                 onClick={() => onEdit(t)}
-                title="누르면 편집 창이 열립니다. 끌어다 놓으면 순서가 바뀝니다"
+                title="누르면 편집 창이 열려요. 끌어다 놓으면 순서가 바뀌어요"
               >
                 <div className="truncate text-sm font-medium">{t.title || <span className="text-muted">제목 없음</span>}</div>
                 <div className="flex flex-wrap items-center gap-x-2 text-xs text-muted">
@@ -107,7 +107,7 @@ export function TimerList({ onEdit, onAdd, onImport }: { onEdit: (t: Timer) => v
                   )}
                 </div>
               </button>
-              <Tooltip text={active && status === "running" ? "잠깐 멈춥니다" : "이 세션으로 바꿔서 바로 시작합니다"}>
+              <Tooltip text={active && status === "running" ? "잠깐 멈춰요" : "이 세션으로 바꿔서 바로 시작해요"}>
                 <button
                   className={`btn btn-sm shrink-0 ${active && status === "running" ? "btn-danger" : ""}`}
                   onClick={() =>

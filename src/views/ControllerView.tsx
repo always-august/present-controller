@@ -65,16 +65,16 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
           <Tooltip
             side="bottom"
             align="end"
-            content={<HelpList title="단축키" items={[<><kbd>Space</kbd> 재생과 일시정지</>, <><kbd>N</kbd> 다음 세션</>, <><kbd>P</kbd> 이전 세션</>, <><kbd>R</kbd> 리셋</>, "입력창에 커서가 있을 때는 동작하지 않습니다"]} />}
+            content={<HelpList title="단축키" items={[<><kbd>Space</kbd> 재생과 일시정지</>, <><kbd>N</kbd> 다음 세션</>, <><kbd>P</kbd> 이전 세션</>, <><kbd>R</kbd> 리셋</>, "입력창에 커서가 있을 때는 동작하지 않아요"]} />}
           >
             <span className="hidden cursor-default text-[11px] text-muted lg:inline">단축키 ⌨</span>
           </Tooltip>
-          <Tooltip text="행사 이름, 뷰어에 보일 요소, 알림음, 시간 형식을 바꿉니다" side="bottom">
+          <Tooltip text="행사 이름, 뷰어에 보일 요소, 알림음, 시간 형식을 바꿔요" side="bottom">
             <button className="btn btn-sm" onClick={() => setDialog("settings")}>
               설정
             </button>
           </Tooltip>
-          <Tooltip text="뷰어, 아젠다, 오퍼레이터 링크와 QR 코드를 복사합니다" side="bottom">
+          <Tooltip text="뷰어, 아젠다, 오퍼레이터 링크와 QR 코드를 복사해요" side="bottom">
             <button className="btn btn-primary btn-sm" onClick={() => setDialog("share")}>
               링크 공유
             </button>

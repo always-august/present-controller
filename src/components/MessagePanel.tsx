@@ -70,11 +70,11 @@ export function MessagePanel() {
               <HelpList
                 title="메시지"
                 items={[
-                  "입력창에 적고 표시를 누르면 뷰어 아래쪽에 바로 뜹니다.",
-                  "색상, 굵게, 깜빡임을 고를 수 있습니다.",
+                  "입력창에 적고 표시를 누르면 뷰어 아래쪽에 바로 떠요.",
+                  "색상, 굵게, 깜빡임을 고를 수 있어요.",
                   "자주 쓰는 문구는 프리셋 저장으로 등록해 두세요.",
-                  "한 번에 두 개까지 보입니다. 띄우고 지워도 타이머는 그대로 갑니다.",
-                  "청중 질문 폼으로 들어온 질문도 여기 쌓입니다. 표시를 누르면 뷰어에 올라갑니다.",
+                  "한 번에 두 개까지 보여요. 띄우고 지워도 타이머는 그대로 가요.",
+                  "청중 질문 폼으로 들어온 질문도 여기 쌓여요. 표시를 누르면 뷰어에 올라가요.",
                 ]}
               />
             }
@@ -82,7 +82,7 @@ export function MessagePanel() {
           {visibleCount > 0 && <span className="ml-1 rounded-full bg-ok/15 px-2 py-0.5 text-xs font-medium text-ok-ink">{visibleCount} 표시 중</span>}
         </h2>
         {visibleCount > 0 && (
-          <Tooltip text="뷰어에 떠 있는 메시지를 전부 내립니다. 목록에는 남습니다">
+          <Tooltip text="뷰어에 떠 있는 메시지를 전부 내려요. 목록에는 남아요">
             <button
               className="btn btn-sm"
               onClick={() => messages.filter((m) => m.visible).forEach((m) => send({ type: "message:toggle", payload: { id: m.id, visible: false } }))}
@@ -102,7 +102,7 @@ export function MessagePanel() {
           }}
         >
           <input className="input" value={text} onChange={(e) => setText(e.target.value)} placeholder="발표자에게 보낼 메시지" maxLength={500} />
-          <Tooltip text="적은 메시지를 뷰어 아래쪽에 바로 띄웁니다. Enter로도 됩니다">
+          <Tooltip text="적은 메시지를 뷰어 아래쪽에 바로 띄워요. Enter로도 돼요">
             <button className="btn btn-primary shrink-0" type="submit" disabled={!text.trim()}>
               표시
             </button>
@@ -111,7 +111,7 @@ export function MessagePanel() {
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <div className="flex gap-1">
             {COLORS.map((c) => (
-              <Tooltip key={c.value} text={`${c.label} 글자로 띄웁니다`}>
+              <Tooltip key={c.value} text={`${c.label} 글자로 띄워요`}>
               <button
                 type="button"
                 onClick={() => setColor(c.value)}
@@ -120,17 +120,17 @@ export function MessagePanel() {
               </Tooltip>
             ))}
           </div>
-          <Tooltip text="글자를 굵게 띄웁니다. 멀리서도 잘 보입니다">
+          <Tooltip text="글자를 굵게 띄워요. 멀리서도 잘 보여요">
             <label className="flex items-center gap-1">
               <input type="checkbox" checked={bold} onChange={(e) => setBold(e.target.checked)} /> 굵게
             </label>
           </Tooltip>
-          <Tooltip text="1초 간격으로 깜빡여서 눈에 띄게 합니다">
+          <Tooltip text="1초 간격으로 깜빡여서 눈에 띄게 해요">
             <label className="flex items-center gap-1">
               <input type="checkbox" checked={flash} onChange={(e) => setFlash(e.target.checked)} /> 깜빡임
             </label>
           </Tooltip>
-          <Tooltip text="지금 적은 문구를 프리셋으로 남깁니다. 이 브라우저에 저장됩니다" className="ml-auto">
+          <Tooltip text="지금 적은 문구를 프리셋으로 남겨요. 이 브라우저에 저장돼요" className="ml-auto">
             <button
               type="button"
               className="btn btn-ghost btn-sm"
@@ -144,7 +144,7 @@ export function MessagePanel() {
         <div className="flex flex-wrap gap-1">
           {presets.map((p) => (
             <span key={p} className="group inline-flex items-center overflow-hidden rounded-full border border-transparent bg-panel-2 text-xs font-medium text-subtext transition hover:border-line">
-              <button type="button" className="px-3 py-1.5 hover:text-ink" onClick={() => show(p)} title="누르면 이 문구가 바로 뷰어에 뜹니다">
+              <button type="button" className="px-3 py-1.5 hover:text-ink" onClick={() => show(p)} title="누르면 이 문구가 바로 뷰어에 떠요">
                 {p}
               </button>
               <button
@@ -171,7 +171,7 @@ export function MessagePanel() {
           </>
         )}
         {operatorMessages.length === 0 && questions.length === 0 && (
-          <p className="p-4 text-center text-xs text-muted">아직 메시지가 없습니다.</p>
+          <p className="p-4 text-center text-xs text-muted">아직 메시지가 없어요.</p>
         )}
         {operatorMessages.map((m) => (
           <MessageRow key={m.id} m={m} />
@@ -185,7 +185,7 @@ function MessageRow({ m }: { m: Message }) {
   const send = useRoomStore((s) => s.send);
   return (
     <div className={`mb-1 flex items-center gap-2 rounded-lg px-2 py-1.5 ${m.visible ? "bg-ok/10" : "hover:bg-panel-2"}`}>
-      <Tooltip text={m.visible ? "뷰어에서 내립니다" : "뷰어에 띄웁니다. 두 개까지 같이 보입니다"}>
+      <Tooltip text={m.visible ? "뷰어에서 내려요" : "뷰어에 띄워요. 두 개까지 같이 보여요"}>
         <button
           className={`shrink-0 rounded px-2 py-1 text-xs font-medium ${m.visible ? "bg-ok text-white" : "bg-panel-2 text-subtext hover:text-ink"}`}
           onClick={() => send({ type: "message:toggle", payload: { id: m.id } })}
@@ -198,7 +198,7 @@ function MessageRow({ m }: { m: Message }) {
         {m.text}
       </span>
       {m.flash && <span className="text-xs text-muted" title="깜빡임">⚡</span>}
-      <Tooltip text="목록에서 지웁니다">
+      <Tooltip text="목록에서 지워요">
         <button className="btn btn-ghost btn-sm text-muted" onClick={() => send({ type: "message:delete", payload: { id: m.id } })}>
           ✕
         </button>

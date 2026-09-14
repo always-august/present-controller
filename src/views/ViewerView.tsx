@@ -187,7 +187,7 @@ export function ViewerView({ roomId, options }: { roomId: string; options: Viewe
         {/* 조작 버튼 (3초 후 숨김) */}
         <div className={`absolute bottom-[3vh] right-[2vw] flex gap-2 transition-opacity ${uiVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}>
           {settings?.chimeEnabled && !audioOn && (
-            <button className="rounded-lg bg-white/15 px-3 py-2 text-sm text-white backdrop-blur hover:bg-white/25" onClick={unlockAudio} title="브라우저 정책상 한 번 탭해야 알림음이 재생됩니다">
+            <button className="rounded-lg bg-white/15 px-3 py-2 text-sm text-white backdrop-blur hover:bg-white/25" onClick={unlockAudio} title="브라우저 정책상 한 번 탭해야 알림음이 재생돼요">
               🔔 알림음 켜기
             </button>
           )}

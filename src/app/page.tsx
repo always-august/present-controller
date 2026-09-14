@@ -20,12 +20,12 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim() || undefined }),
       });
-      if (res.status === 429) throw new Error("방을 너무 많이 만들었습니다. 잠시 뒤 다시 시도해 주세요.");
+      if (res.status === 429) throw new Error("방을 너무 많이 만들었어요. 잠시 뒤 다시 시도해 주세요.");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { roomId, controllerKey } = (await res.json()) as { roomId: string; controllerKey: string };
       router.push(`/r/${roomId}?key=${controllerKey}`);
     } catch (e) {
-      setError((e as Error).message.startsWith("HTTP") ? `방을 만들지 못했습니다: ${(e as Error).message}` : (e as Error).message);
+      setError((e as Error).message.startsWith("HTTP") ? `방을 만들지 못했어요: ${(e as Error).message}` : (e as Error).message);
       setBusy(false);
     }
   };
@@ -55,9 +55,9 @@ export default function Home() {
                   <HelpList
                     title="시작하기"
                     items={[
-                      "방 만들기를 누르면 바로 컨트롤러가 열립니다. 가입은 없습니다.",
+                      "방 만들기를 누르면 바로 컨트롤러가 열려요. 가입은 없어요.",
                       "컨트롤러 주소 끝의 ?key= 비밀키를 아는 사람은 누구나 조작할 수 있으니 운영자끼리만 주고받으세요.",
-                      "이름은 나중에 설정에서 바꿀 수 있습니다.",
+                      "이름은 나중에 설정에서 바꿀 수 있어요.",
                     ]}
                   />
                 }
@@ -79,13 +79,13 @@ export default function Home() {
         </form>
         <div className="mt-6 space-y-2 text-center text-sm leading-relaxed text-muted">
           <p>
-            방을 만들면 바로 링크가 발급됩니다.
+            방을 만들면 바로 링크가 발급돼요.
             <br />
-            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
+            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 열어 주세요.
           </p>
           <p className="inline-flex items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1 text-xs text-subtext">
             <span aria-hidden>🖥</span>
-            컨트롤러는 PC 화면에 맞춰져 있습니다. 휴대폰에서는 오퍼레이터 화면을 쓰세요.
+            PC에서 사용을 권장드려요.
           </p>
         </div>
       </div>
