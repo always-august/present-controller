@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TextThree from "@/components/ui/text-three";
 import { Footer } from "@/components/Footer";
+import { SupportButton } from "@/components/SupportButton";
 
 export default function Home() {
   const router = useRouter();
@@ -70,6 +71,9 @@ export default function Home() {
             <span aria-hidden>🖥</span>
             PC에서 사용을 권장드려요.
           </p>
+          <div className="pt-2">
+            <SupportButton />
+          </div>
         </div>
       </div>
       </div>
