@@ -39,11 +39,6 @@ export default function Home() {
             <TextThree text="마무리 부탁드립니다!" speed={90} />
           </h1>
           <p className="mt-2 text-base font-medium text-subtext">발표자 타이머 컨트롤러</p>
-          <p className="mt-4 text-sm leading-relaxed text-muted">
-            방을 만들면 바로 링크가 발급됩니다.
-            <br />
-            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
-          </p>
         </div>
         <form
           className="card p-6 space-y-4"
@@ -82,6 +77,17 @@ export default function Home() {
           </button>
           {error && <p className="text-sm text-danger">{error}</p>}
         </form>
+        <div className="mt-6 space-y-2 text-center text-sm leading-relaxed text-muted">
+          <p>
+            방을 만들면 바로 링크가 발급됩니다.
+            <br />
+            노트북에서 제어하고, 무대 화면에서는 뷰어 링크를 여세요.
+          </p>
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1 text-xs text-subtext">
+            <span aria-hidden>🖥</span>
+            컨트롤러는 PC 화면에 맞춰져 있습니다. 휴대폰에서는 오퍼레이터 화면을 쓰세요.
+          </p>
+        </div>
       </div>
       </div>
       <Footer />
