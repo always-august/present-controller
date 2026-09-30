@@ -140,7 +140,7 @@ export function ViewerView({ roomId, options }: { roomId: string; options: Viewe
         <ConnectionBadge minimal />
 
         {/* 상단: 제목/발표자, 현재 시각 */}
-        <div className="flex items-start justify-between px-[3vw] pt-[2vh] text-white/80" style={{ fontSize: "min(3.5vw, 5vh)" }}>
+        <div className="safe-t flex items-start justify-between px-[3vw] pt-[2vh] text-white/80" style={{ fontSize: "min(5vw, 5vh)" }}>
           <div className="min-w-0 pr-4 leading-tight">
             {showTitle && <div className="truncate font-semibold">{timer.title}</div>}
             {showSpeaker && <div className="truncate text-white/60" style={{ fontSize: "0.7em" }}>{timer.speaker}</div>}
@@ -149,13 +149,13 @@ export function ViewerView({ roomId, options }: { roomId: string; options: Viewe
         </div>
 
         {/* 중앙: 숫자 */}
-        <div className={`min-h-0 flex-1 px-[3vw] text-white ${hasMessages ? "pb-[2vh]" : "pb-[6vh]"}`}>
+        <div className={`min-h-0 flex-1 px-[2vw] text-white ${hasMessages ? "pb-[2vh]" : "pb-[8vh]"}`}>
           <BigTime text={timeText} phase={timer?.mode === "clock" ? "normal" : phase} />
         </div>
 
         {/* 하단: 메시지 */}
         {hasMessages && (
-          <div className="flex flex-col items-center gap-[1vh] px-[4vw] pb-[6vh]">
+          <div className="safe-b flex flex-col items-center gap-[1vh] px-[4vw] pb-[8vh]">
             {visibleMessages.map((m) => (
               <MessageLine key={m.id} m={m} />
             ))}
@@ -185,7 +185,7 @@ export function ViewerView({ roomId, options }: { roomId: string; options: Viewe
         )}
 
         {/* 조작 버튼 (3초 후 숨김) */}
-        <div className={`absolute bottom-[3vh] right-[2vw] flex gap-2 transition-opacity ${uiVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+        <div className={`absolute right-[2vw] flex gap-2 transition-opacity ${uiVisible ? "opacity-100" : "pointer-events-none opacity-0"}`} style={{ bottom: "calc(3vh + env(safe-area-inset-bottom))" }}>
           {settings?.chimeEnabled && !audioOn && (
             <button className="rounded-lg bg-white/15 px-3 py-2 text-sm text-white backdrop-blur hover:bg-white/25" onClick={unlockAudio} title="브라우저 정책상 한 번 탭해야 알림음이 재생돼요">
               🔔 알림음 켜기

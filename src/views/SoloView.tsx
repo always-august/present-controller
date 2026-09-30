@@ -250,7 +250,7 @@ function SoloTimer({ settings, onExit }: { settings: SoloSettings; onExit: () =>
     else void document.documentElement.requestFullscreen().catch(() => {});
   };
 
-  const btn = "rounded-lg bg-white/15 px-3 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/25 active:scale-[0.98] disabled:opacity-40";
+  const btn = "whitespace-nowrap rounded-lg bg-white/15 px-2.5 py-2 text-[13px] font-medium text-white backdrop-blur transition hover:bg-white/25 active:scale-[0.98] disabled:opacity-40 sm:px-3 sm:text-sm";
 
   return (
     <div
@@ -261,13 +261,14 @@ function SoloTimer({ settings, onExit }: { settings: SoloSettings; onExit: () =>
     >
       {/* 상단: 제목 */}
       {settings.title && (
-        <div className="px-[3vw] pt-[2vh] font-semibold leading-tight text-white/80" style={{ fontSize: "min(3.5vw, 5vh)" }}>
+        <div className="safe-t px-[3vw] pt-[2vh] font-semibold leading-tight text-white/80" style={{ fontSize: "min(5vw, 5vh)" }}>
           <div className="truncate">{settings.title}</div>
         </div>
       )}
 
       {/* 중앙: 숫자 */}
-      <div className="min-h-0 flex-1 px-[3vw] pb-[10vh]">
+      {/* 아래 조작 줄이 두 줄로 접혀도 숫자와 겹치지 않게 여백을 넉넉히 둔다 */}
+      <div className="min-h-0 flex-1 px-[2vw]" style={{ paddingBottom: "calc(max(12vh, 120px) + env(safe-area-inset-bottom))" }}>
         <BigTime text={timeText} phase={phase} />
       </div>
 
@@ -291,41 +292,50 @@ function SoloTimer({ settings, onExit }: { settings: SoloSettings; onExit: () =>
       )}
 
       {/* 조작 줄 */}
-      <div className={`absolute inset-x-0 bottom-[4vh] flex justify-center px-4 transition-opacity ${uiVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-        <div className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/10 p-2 backdrop-blur-md">
-          <button className={btn} onClick={onExit} title="설정으로 돌아가요 (Esc)">
-            ← 설정
-          </button>
-          <button className={btn} onClick={reset} title="처음 길이로 되돌려요 (R)">
-            ↺ 리셋
-          </button>
-          <button className={btn} onClick={() => adjust(-60_000)} title="1분 줄여요 (↓)">
-            −1분
-          </button>
-          <button className={btn} onClick={() => adjust(-30_000)} title="30초 줄여요 (Shift+↓)">
-            −30초
-          </button>
-          <button
-            className={`${btn} min-w-32 ${isRunning ? "bg-danger/80 hover:bg-danger" : "bg-accent hover:bg-accent-dark"}`}
-            onClick={isRunning ? pause : start}
-            aria-label={isRunning ? "일시정지 (Space)" : "시작 (Space)"}
-          >
-            {isRunning ? "❚❚ 일시정지" : playback.status === "paused" ? "▶ 재개" : "▶ 시작"}
-          </button>
-          <button className={btn} onClick={() => adjust(30_000)} title="30초 늘려요 (Shift+↑)">
-            +30초
-          </button>
-          <button className={btn} onClick={() => adjust(60_000)} title="1분 늘려요 (↑)">
-            +1분
-          </button>
-          {settings.chime && !audioOn && (
-            <button className={btn} onClick={unlockAudio} title="브라우저 정책상 한 번 탭해야 알림음이 재생돼요">
-              🔔 알림음
+      <div
+        className={`absolute inset-x-0 flex justify-center px-3 transition-opacity ${uiVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        style={{ bottom: "calc(3vh + env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex max-w-full flex-col items-center gap-2 rounded-2xl bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:flex-wrap sm:justify-center">
+          {/* 1줄: 시간 조작 */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button className={btn} onClick={() => adjust(-60_000)} title="1분 줄여요 (↓)">
+              −1분
             </button>
-          )}
-          <button className={btn} onClick={toggleFullscreen}>
-            {isFullscreen ? "풀스크린 해제" : "⛶ 풀스크린"}
-          </button>
+            <button className={btn} onClick={() => adjust(-30_000)} title="30초 줄여요 (Shift+↓)">
+              −30초
+            </button>
+            <button
+              className={`${btn} min-w-28 sm:min-w-32 ${isRunning ? "bg-danger/80 hover:bg-danger" : "bg-accent hover:bg-accent-dark"}`}
+              onClick={isRunning ? pause : start}
+              aria-label={isRunning ? "일시정지 (Space)" : "시작 (Space)"}
+            >
+              {isRunning ? "❚❚ 일시정지" : playback.status === "paused" ? "▶ 재개" : "▶ 시작"}
+            </button>
+            <button className={btn} onClick={() => adjust(30_000)} title="30초 늘려요 (Shift+↑)">
+              +30초
+            </button>
+            <button className={btn} onClick={() => adjust(60_000)} title="1분 늘려요 (↑)">
+              +1분
+            </button>
+          </div>
+          {/* 2줄: 그 외 */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button className={btn} onClick={onExit} title="설정으로 돌아가요 (Esc)">
+              ← 설정
+            </button>
+            <button className={btn} onClick={reset} title="처음 길이로 되돌려요 (R)">
+              ↺ 리셋
+            </button>
+            {settings.chime && !audioOn && (
+              <button className={btn} onClick={unlockAudio} title="브라우저 정책상 한 번 탭해야 알림음이 재생돼요">
+                🔔 알림음
+              </button>
+            )}
+            <button className={btn} onClick={toggleFullscreen}>
+              {isFullscreen ? "풀스크린 해제" : "⛶ 풀스크린"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

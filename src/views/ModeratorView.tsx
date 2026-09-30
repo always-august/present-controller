@@ -16,13 +16,13 @@ export function ModeratorView({ roomId, controllerKey }: { roomId: string; contr
 
   return (
     <RoomGate requireController>
-      <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col p-3">
+      <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col p-3">
         <header className="mb-3 flex items-center gap-3">
           <h1 className="flex-1 text-sm font-semibold">모더레이터 · 메시지</h1>
           <ConnectionBadge />
           <span className={`font-mono text-2xl font-semibold tnum ${color}`}>{timer ? formatMs(remainingMs) : "--:--"}</span>
         </header>
-        <div className="min-h-[70vh] flex-1">
+        <div className="min-h-[70dvh] flex-1">
           <MessagePanel />
         </div>
       </div>

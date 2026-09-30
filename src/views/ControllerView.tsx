@@ -72,7 +72,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
 
   return (
     <RoomGate requireController>
-      <div className="flex min-h-screen flex-col lg:h-screen">
+      <div className="flex min-h-dvh flex-col lg:h-dvh">
         <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-white/80 px-4 py-2 backdrop-blur-md">
           <BrandMark />
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold">{roomName || "이름 없는 방"}</h1>

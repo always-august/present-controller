@@ -25,7 +25,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 backdrop-blur-[2px]" onMouseDown={onClose}>
       <div
-        className={`card animate-pop-in max-h-[90vh] w-full overflow-y-auto p-6 shadow-[var(--shadow-card-hover)] ${wide ? "max-w-3xl" : "max-w-lg"}`}
+        className={`card animate-pop-in max-h-[90dvh] w-full overflow-y-auto p-6 shadow-[var(--shadow-card-hover)] ${wide ? "max-w-3xl" : "max-w-lg"}`}
         onMouseDown={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

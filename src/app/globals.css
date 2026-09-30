@@ -144,3 +144,17 @@ kbd {
 code {
   @apply rounded-md border border-line bg-panel-2 px-1.5 py-0.5 font-mono text-[0.85em] text-subtext;
 }
+
+/* ── 모바일 ─────────────────────────────────────────────────────────────── */
+/* iOS Safari는 16px보다 작은 입력창에 포커스하면 페이지를 확대한다. 작은 화면에선 16px로 고정 */
+@media (max-width: 640px) {
+  .input,
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+/* 노치·홈 인디케이터 영역 피하기 */
+.safe-t { padding-top: env(safe-area-inset-top); }
+.safe-b { padding-bottom: env(safe-area-inset-bottom); }

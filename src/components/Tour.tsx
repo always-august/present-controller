@@ -9,7 +9,7 @@ export interface TourStep {
 }
 
 const PAD = 8;
-const CARD_W = 340;
+const CARD_W_MAX = 340;
 const GAP = 14;
 
 interface Rect { top: number; left: number; width: number; height: number }
@@ -88,6 +88,7 @@ export function Tour({ steps, open, onClose }: { steps: TourStep[]; open: boolea
   }, [open, skip, next, prev]);
 
   if (!open || !step || !rect) return null;
+  const CARD_W = Math.min(CARD_W_MAX, vw - 24);
 
   // 카드 위치: 아래 → 위 → 오른쪽 → 가운데 순으로 들어갈 자리를 찾는다
   const cardH = 220;

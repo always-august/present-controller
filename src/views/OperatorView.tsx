@@ -15,7 +15,7 @@ export function OperatorView({ roomId, controllerKey }: { roomId: string; contro
 
   return (
     <RoomGate requireController>
-      <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col p-3">
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col p-3">
         <header className="mb-3 flex items-center gap-3">
           <h1 className="flex-1 text-sm font-semibold">오퍼레이터</h1>
           <ConnectionBadge />
