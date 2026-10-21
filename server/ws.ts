@@ -13,7 +13,8 @@ interface Client {
 }
 
 export class RoomSocketServer {
-  private wss = new WebSocketServer({ noServer: true });
+  // CSV 임포트 200개도 수십 KB면 충분하다. 그 이상은 잘못된 클라이언트로 본다
+  private wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
   private clients = new Map<string, Set<Client>>();
 
   constructor(

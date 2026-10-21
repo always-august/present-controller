@@ -60,6 +60,8 @@ export class RoomStore {
     for (const row of rows) {
       try {
         const room = JSON.parse(row.data) as Room;
+        // 설정 항목이 늘어난 뒤 저장된 옛 방도 빠진 키 없이 쓰도록 기본값을 채운다
+        room.settings = { ...DEFAULT_SETTINGS, ...room.settings };
         // 재시작 직후에는 진행 중이던 타이머를 일시정지 상태로 복구한다.
         // deadline 기준으로 계속 흐르게 두면 서버 다운 시간만큼 어긋나므로 운영자가 다시 시작하도록 한다.
         if (room.playback.status === "running" && room.playback.deadline != null) {
@@ -84,12 +86,19 @@ export class RoomStore {
       "INSERT INTO rooms (id, data, last_active) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data, last_active = excluded.last_active",
     );
     const del = this.db.prepare("DELETE FROM rooms WHERE id = ?");
-    for (const id of this.dirty) {
-      const room = this.rooms.get(id);
-      if (room) upsert.run(id, JSON.stringify(room), room.lastActiveAt);
-      else del.run(id);
+    this.db.exec("BEGIN");
+    try {
+      for (const id of this.dirty) {
+        const room = this.rooms.get(id);
+        if (room) upsert.run(id, JSON.stringify(room), room.lastActiveAt);
+        else del.run(id);
+      }
+      this.db.exec("COMMIT");
+      this.dirty.clear();
+    } catch (err) {
+      this.db.exec("ROLLBACK");
+      console.error("[store] snapshot failed", err);
     }
-    this.dirty.clear();
   }
 
   private expire() {
@@ -139,6 +148,10 @@ export class RoomStore {
 
   get(id: string): Room | undefined {
     return this.rooms.get(id);
+  }
+
+  all(): Iterable<Room> {
+    return this.rooms.values();
   }
 
   /** 변경 후 반드시 호출. 활동 시각 갱신 + 스냅샷 대상 표시 */

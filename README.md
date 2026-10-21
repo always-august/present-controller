@@ -1,6 +1,6 @@
 # 마부 (MABU)
 
-**마무리 부탁드립니다.** 원격 제어형 발표 타이머. 운영자가 노트북/휴대폰에서 타이머와 메시지를 제어하고, 발표자는 공유 링크로 열린 풀스크린 화면을 보면서 발표합니다. stagetimer.io 와 같은 구조입니다.
+**마무리 부탁드립니다.** 원격 제어형 발표 타이머. 운영자가 어드민 화면에서 타이머와 메시지를 제어하고, 발표자는 공유 링크로 열린 풀스크린 뷰어를 보면서 발표합니다. 혼자 발표할 때는 `/solo`로 서버 없이 쓸 수 있습니다. stagetimer.io 와 같은 구조입니다.
 
 ## 배포 (Railway)
 
@@ -31,26 +31,43 @@ npm run dev        # http://localhost:3000
 
 ```bash
 npm run build
-npm start          # NODE_ENV=production, PORT / HOST 환경변수로 변경 가능
+npm start          # NODE_ENV=production, PORT / HOST / DATA_DIR 환경변수로 변경 가능
 ```
 
-다른 기기에서 접속하려면 `localhost` 대신 이 컴퓨터의 LAN IP(예: `http://192.168.0.10:3000`)로 열어야 합니다. 컨트롤러의 **링크 공유** 버튼이 각 화면의 링크와 QR 코드를 보여줍니다.
+개발 중 같은 Wi‑Fi의 휴대폰에서 열어 보려면 `localhost` 대신 이 컴퓨터의 LAN IP(예: `http://192.168.0.10:3000`)로 접속한다. `next.config.ts`가 LAN IP를 `allowedDevOrigins`에 자동으로 넣는다.
 
 ## 화면
 
 | 경로 | 역할 | 접근 |
 | --- | --- | --- |
 | `/` | 방 생성 | 공개 |
-| `/r/:roomId?key=…` | 컨트롤러 — 타이머 CRUD·드래그 정렬·재생 제어·메시지·CSV 임포트·설정·링크 공유 | 비밀키 |
+| `/solo` | 혼자 발표하기. 서버 없이 이 기기에서만 도는 타이머 (설정은 localStorage) | 공개 |
+| `/r/:roomId?key=…` | 어드민 — 타이머 CRUD·드래그 정렬·재생 제어·메시지·CSV 임포트·설정·링크 공유·튜토리얼 | 비밀키 |
 | `/r/:roomId/viewer` | 발표자용 풀스크린 타이머 | 공개 |
-| `/r/:roomId/agenda` | 러닝오더와 진행 상황 | 공개 |
 | `/r/:roomId/ask` | 청중 질문 제출 폼 | 공개 |
-| `/r/:roomId/moderator?key=…` | 메시지 전용 제어 | 비밀키 |
-| `/r/:roomId/operator?key=…` | 시작/일시정지/이전/다음/가감만 있는 단순 제어 | 비밀키 |
+| `/r/:roomId/agenda` | 러닝오더와 진행 상황 (링크 공유 목록에는 없음, 주소로 직접 접근) | 공개 |
+| `/r/:roomId/operator?key=…` | 시작/일시정지/이전/다음/가감만 있는 단순 제어 (주소로 직접 접근) | 비밀키 |
+| `/r/:roomId/moderator?key=…` | 메시지 전용 제어 (주소로 직접 접근) | 비밀키 |
 
 뷰어 쿼리 옵션: `?chroma=green|blue|magenta|<hex>` (크로마키 배경), `?hideTitle=1`, `?hideSpeaker=1`, `?hideClock=1`, `?hideProgress=1`, `?hideMessages=1`
 
-컨트롤러 단축키: `Space` 재생/일시정지 · `N` 다음 · `P` 이전 · `R` 리셋
+어드민 단축키: `Space` 재생/일시정지 · `N` 다음 · `P` 이전 · `R` 리셋
+솔로 단축키: `Space` 시작/일시정지 · `R` 리셋 · `↑`/`↓` ±1분 · `Shift+↑`/`↓` ±30초 · `Esc` 설정으로
+
+## REST API
+
+외부 도구(Stream Deck 등) 연동용. 제어 계열은 `?key=` 또는 body의 `key`가 필요하다.
+
+```
+POST   /api/rooms                      방 생성 → { roomId, controllerKey }   (IP당 10분에 10회)
+GET    /api/rooms/:id                  방 상태 (공개, 비밀키·메모 제외)
+POST   /api/rooms/:id/questions        청중 질문 { text }                    (IP당 1분에 5회)
+POST   /api/rooms/:id/start            { timerId? }
+POST   /api/rooms/:id/pause | toggle | reset | stop | next | prev
+POST   /api/rooms/:id/adjust           { deltaMs }
+POST   /api/rooms/:id/message          { text, color?, bold?, flash?, visible? }
+DELETE /api/rooms/:id/message/:msgId
+```
 
 ## 동작 원리
 

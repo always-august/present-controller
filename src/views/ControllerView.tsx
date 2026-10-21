@@ -47,7 +47,7 @@ export function ControllerView({ roomId, controllerKey }: { roomId: string; cont
       const typing = target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable);
       if (typing || dialog || tourOpen || e.metaKey || e.ctrlKey || e.altKey) return;
       const status = useRoomStore.getState().room?.playback.status;
-      switch (e.key) {
+      switch (e.code === "Space" ? " " : e.key) {
         case " ":
           e.preventDefault();
           send({ type: status === "running" ? "playback:pause" : "playback:start", payload: {} });

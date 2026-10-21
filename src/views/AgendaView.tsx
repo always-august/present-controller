@@ -17,13 +17,14 @@ export function AgendaView({ roomId }: { roomId: string }) {
   const { remainingMs, phase } = useCountdown(room?.playback, active);
   const [clock, setClock] = useState("");
 
+  const settings = room?.settings;
   useEffect(() => {
-    if (!room) return;
-    const tick = () => setClock(formatClock(now(), room.settings.timeFormat, room.settings.timezone));
+    if (!settings) return;
+    const tick = () => setClock(formatClock(now(), settings.timeFormat, settings.timezone));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [room, now]);
+  }, [settings, now]);
 
   const activeIndex = timers.findIndex((t) => t.id === active?.id);
   const status = room?.playback.status ?? "idle";

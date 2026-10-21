@@ -24,6 +24,7 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
         <div>
           <label className="label">행사 이름</label>
           <input
+            key={name}
             className="input"
             defaultValue={name}
             onBlur={(e) => e.target.value !== name && send({ type: "room:rename", payload: { name: e.target.value } })}

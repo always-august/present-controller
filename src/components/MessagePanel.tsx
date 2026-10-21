@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Message, MessageColor } from "../../shared/types";
 import { EMPTY_MESSAGES, useRoomStore } from "../store/room";
 import { Tooltip } from "./Tooltip";
@@ -38,7 +38,9 @@ export function MessagePanel() {
   const [color, setColor] = useState<MessageColor>("white");
   const [bold, setBold] = useState(true);
   const [flash, setFlash] = useState(false);
-  const [presets, setPresets] = useState<string[]>(() => (typeof window === "undefined" ? DEFAULT_PRESETS : loadPresets()));
+  const [presets, setPresets] = useState<string[]>(DEFAULT_PRESETS);
+  // localStorage는 브라우저에만 있으므로 마운트 뒤에 읽는다. 서버 렌더와 첫 화면이 같아야 hydration 경고가 없다
+  useEffect(() => setPresets(loadPresets()), []);
 
   const savePresets = (next: string[]) => {
     setPresets(next);

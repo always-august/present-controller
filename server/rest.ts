@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { MessageColor, Room } from "../shared/types";
+import type { MessageColor } from "../shared/types";
 import type { RoomEngine } from "./engine";
 import { clientIp, RateLimiter } from "./rateLimit";
 import { toPublicRoom, type RoomStore } from "./store";
@@ -175,4 +175,3 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   }
 }
 
-export type { Room };

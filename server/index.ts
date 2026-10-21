@@ -20,6 +20,7 @@ async function main() {
   let sockets: RoomSocketServer;
   const engine = new RoomEngine(store, (roomId, event) => sockets.broadcast(roomId, event));
   sockets = new RoomSocketServer(store, engine);
+  engine.rescheduleAll(store.all()); // 저장돼 있던 예약 시작을 다시 건다
   const rest = createRestHandler(store, engine);
 
   const server = createServer(async (req, res) => {

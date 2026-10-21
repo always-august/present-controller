@@ -13,6 +13,14 @@ import type { RoomStore } from "./store";
 
 type Broadcast = (roomId: string, event: ServerEvent) => void;
 
+const TIMER_MODES = new Set(["countdown", "countup", "clock"]);
+const START_MODES = new Set(["manual", "scheduled"]);
+const APPEARANCES = new Set(["default", "chroma"]);
+const MESSAGE_COLORS = new Set(["white", "yellow", "red", "green"]);
+/** 허용 목록에 있으면 그 값을, 아니면 기본값을 돌려준다. 클라이언트가 보낸 열거형 값 검증용 */
+const oneOf = <T extends string>(allowed: Set<string>, value: unknown, fallback: T): T =>
+  typeof value === "string" && allowed.has(value) ? (value as T) : fallback;
+
 const MAX_TIMEOUT = 2 ** 31 - 1;
 
 /**
@@ -51,8 +59,13 @@ export class RoomEngine {
 
   start(room: Room, timerId?: string) {
     const now = Date.now();
-    let target = timerId ? room.timers.find((t) => t.id === timerId) : this.activeTimer(room);
-    if (!target) target = this.sortedTimers(room)[0];
+    let target: Timer | undefined;
+    if (timerId) {
+      target = room.timers.find((t) => t.id === timerId);
+      if (!target) return; // 지워진 타이머(예: chainNext 예약 뒤 삭제)를 시작하라는 요청은 무시
+    } else {
+      target = this.activeTimer(room) ?? this.sortedTimers(room)[0];
+    }
     if (!target) return;
 
     const switching = target.id !== room.activeTimerId;
@@ -153,18 +166,18 @@ export class RoomEngine {
       title: String(input.title ?? base.title).slice(0, 120),
       speaker: String(input.speaker ?? base.speaker).slice(0, 120),
       notes: String(input.notes ?? base.notes).slice(0, 2000),
-      mode: input.mode ?? base.mode,
+      mode: oneOf(TIMER_MODES, input.mode, base.mode),
       durationMs,
-      startMode: input.startMode ?? base.startMode,
+      startMode: oneOf(START_MODES, input.startMode, base.startMode),
       scheduledStart:
         input.scheduledStart === undefined
           ? base.scheduledStart
-          : input.scheduledStart == null
+          : input.scheduledStart == null || !Number.isFinite(Number(input.scheduledStart))
             ? null
             : Number(input.scheduledStart),
       wrapUpMs: Math.max(0, Math.round(Number(input.wrapUpMs ?? base.wrapUpMs) || 0)),
       chainNext: Boolean(input.chainNext ?? base.chainNext),
-      appearance: input.appearance ?? base.appearance,
+      appearance: oneOf(APPEARANCES, input.appearance, base.appearance),
     };
   }
 
@@ -217,9 +230,8 @@ export class RoomEngine {
     if (wasActive) {
       room.activeTimerId = this.sortedTimers(room)[0]?.id ?? null;
       room.playback = { ...IDLE_PLAYBACK };
-      this.commitPlayback(room);
     }
-    this.commitTimers(room);
+    this.commitTimers(room); // playback:update도 함께 전파된다
   }
 
   reorderTimers(room: Room, ids: string[]) {
@@ -248,7 +260,7 @@ export class RoomEngine {
     const msg: Message = {
       id: newEntityId(),
       text: String(input.text ?? "").slice(0, 500),
-      color: input.color ?? "white",
+      color: oneOf(MESSAGE_COLORS, input.color, "white"),
       bold: Boolean(input.bold ?? false),
       flash: Boolean(input.flash ?? false),
       visible: Boolean(input.visible ?? false),
@@ -265,7 +277,7 @@ export class RoomEngine {
     const msg = room.messages.find((m) => m.id === id);
     if (!msg) return;
     if (input.text !== undefined) msg.text = String(input.text).slice(0, 500);
-    if (input.color !== undefined) msg.color = input.color;
+    if (input.color !== undefined) msg.color = oneOf(MESSAGE_COLORS, input.color, msg.color);
     if (input.bold !== undefined) msg.bold = Boolean(input.bold);
     if (input.flash !== undefined) msg.flash = Boolean(input.flash);
     if (input.visible !== undefined) msg.visible = Boolean(input.visible);
