@@ -2,16 +2,17 @@
 import { Children } from "react";
 import { Tour, type TourStep } from "./Tour";
 
-/** 문장 하나에 한 줄씩 */
-function Lines({ children }: { children: React.ReactNode }) {
+/** 항목 하나에 불릿 하나 */
+function Bullets({ children }: { children: React.ReactNode }) {
   return (
-    <span className="block space-y-1">
+    <ul className="space-y-1.5">
       {Children.map(children, (c, i) => (
-        <span key={i} className="block">
-          {c}
-        </span>
+        <li key={i} className="flex gap-2">
+          <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-muted" aria-hidden />
+          <span className="min-w-0">{c}</span>
+        </li>
       ))}
-    </span>
+    </ul>
   );
 }
 
@@ -22,82 +23,82 @@ const STEPS: TourStep[] = [
     target: "timers",
     title: "타이머 목록",
     body: (
-      <Lines>
-        <>발표 순서대로 세션을 넣어요.</>
-        <><b>+ 추가</b>로 하나씩 넣거나 <b>CSV</b>로 한꺼번에 불러와요.</>
-        <>항목을 누르면 편집 창이 열리고, 끌어다 놓으면 순서가 바뀌어요.</>
-        <><b>▶</b>를 누르면 그 세션이 바로 시작돼요.</>
-        <>세션마다 <b>종료 안내 시점</b>을 정해 두면 그만큼 남았을 때 뷰어가 노란색으로 바뀌고 알림이 울려요.</>
-      </Lines>
+      <Bullets>
+        <><b>+ 추가</b> 하나씩 넣어요</>
+        <><b>CSV</b> 한꺼번에 불러와요</>
+        <><b>항목 클릭</b> 편집해요</>
+        <><b>끌어다 놓기</b> 순서를 바꿔요</>
+        <><b>▶</b> 그 세션을 바로 시작해요</>
+      </Bullets>
     ),
   },
   {
     target: "current",
     title: "현재 세션",
     body: (
-      <Lines>
-        <>지금 진행 중인 세션과 남은 시간이에요.</>
-        <>발표자가 보는 뷰어에도 같은 숫자가 떠요.</>
-        <>종료 안내 시점부터 노란색으로 바뀌어요.</>
-        <>0을 지나면 빨간색으로 바뀌고 초과 시간이 계속 올라가요.</>
-      </Lines>
+      <Bullets>
+        <>뷰어와 같은 숫자가 떠요</>
+        <><b className="text-warn-ink">노란색</b> 종료 안내 시점에 들어섰어요</>
+        <><b className="text-danger-ink">빨간색</b> 시간을 넘겼어요. 초과 시간이 계속 올라가요</>
+      </Bullets>
     ),
   },
   {
     target: "playback",
     title: "재생 제어",
     body: (
-      <Lines>
-        <><b>시작</b>과 <b>일시정지</b>, <b>이전</b>과 <b>다음</b> 세션으로 이동해요.</>
-        <><b>리셋</b>은 지금 세션을 처음 길이로 되돌려요.</>
-        <><b>정지</b>는 세션 선택까지 풀어요.</>
-        <>단축키는 <kbd>Space</kbd> 재생·일시정지, <kbd>N</kbd> 다음, <kbd>P</kbd> 이전, <kbd>R</kbd> 리셋이에요.</>
-      </Lines>
+      <Bullets>
+        <><b>시작·일시정지</b> <kbd>Space</kbd></>
+        <><b>이전·다음</b> <kbd>P</kbd> <kbd>N</kbd></>
+        <><b>리셋</b> 처음 길이로 되돌려요 <kbd>R</kbd></>
+        <><b>정지</b> 세션 선택까지 풀어요</>
+      </Bullets>
     ),
   },
   {
     target: "adjust",
     title: "시간 가감",
     body: (
-      <Lines>
-        <>발표가 길어지거나 짧아지면 여기서 바로 늘리고 줄여요.</>
-        <>진행 중에도 즉시 반영되고, 뷰어 숫자도 같이 바뀌어요.</>
-      </Lines>
+      <Bullets>
+        <>진행 중에도 바로 늘리고 줄여요</>
+        <>뷰어 숫자도 같이 바뀌어요</>
+      </Bullets>
     ),
   },
   {
     target: "messages",
     title: "메시지",
     body: (
-      <Lines>
-        <>발표자에게 보낼 말이에요.</>
-        <>적고 <b>표시</b>를 누르면 뷰어 아래쪽에 떠요.</>
-        <>색상, 굵게, 깜빡임을 고를 수 있어요.</>
-        <>자주 쓰는 문구는 <b>프리셋</b>으로 저장해 두세요.</>
-        <>한 번에 두 개까지 보여요.</>
-        <>청중 질문 폼으로 들어온 질문도 여기 쌓여요.</>
-      </Lines>
+      <Bullets>
+        <><b>표시</b> 뷰어 아래쪽에 바로 떠요</>
+        <><b>색상·굵게·깜빡임</b> 골라서 띄워요</>
+        <><b>프리셋</b> 자주 쓰는 문구를 저장해요</>
+        <>한 번에 두 개까지 보여요</>
+        <>청중 질문도 여기 쌓여요</>
+      </Bullets>
     ),
   },
   {
     target: "share",
     title: "링크 공유",
     body: (
-      <Lines>
-        <>뷰어, 청중 질문, 어드민 링크와 QR 코드가 여기 있어요.</>
-        <><b>뷰어</b>는 무대 화면이나 발표자 태블릿에 띄워 주세요.</>
-        <>비밀키가 붙은 링크는 운영자끼리만 주고받으세요.</>
-      </Lines>
+      <Bullets>
+        <><b>뷰어</b> 무대 화면이나 발표자 태블릿용이에요</>
+        <><b>청중 질문</b> 청중에게 나눠 줘요</>
+        <><b>어드민</b> 운영자끼리만 주고받아요</>
+        <>링크마다 QR이 있어요</>
+      </Bullets>
     ),
   },
   {
     target: "settings",
     title: "설정",
     body: (
-      <Lines>
-        <>행사 이름, 뷰어에 보일 요소, 알림음, 시간 형식을 바꿔요.</>
-        <>이 튜토리얼은 헤더의 <b>튜토리얼</b> 버튼으로 언제든 다시 볼 수 있어요.</>
-      </Lines>
+      <Bullets>
+        <>행사 이름을 바꿔요</>
+        <>뷰어에 보일 요소와 알림음을 골라요</>
+        <>튜토리얼은 헤더의 <b>튜토리얼</b> 버튼으로 다시 볼 수 있어요</>
+      </Bullets>
     ),
   },
 ];

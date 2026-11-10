@@ -13,7 +13,7 @@
   --font-mono: var(--font-geist-mono), "JetBrains Mono", "D2Coding", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* 바탕 */
-  --color-base: #ffffff; /* 페이지 배경 */
+  --color-page: #ffffff; /* 페이지 배경. "base"로 이름 지으면 text-base(글자 크기)가 색까지 바꿔 버린다 */
   --color-panel: #ffffff; /* 카드 */
   --color-panel-2: #f9fafb; /* 카드 안의 옅은 면, 칩, 호버 */
   --color-surface: #ffffff; /* 입력창 */
@@ -47,7 +47,7 @@ body {
 }
 
 body {
-  background: var(--color-base);
+  background: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
