@@ -12,8 +12,35 @@ interface LinkDef {
   help?: React.ReactNode[];
 }
 
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
+
+/**
+ * 링크와 QR에 쓸 주소. 어드민을 localhost로 열었으면 그대로 두면 다른 기기가 자기 자신에게 접속하므로
+ * 서버에 물어 사내망 IP로 바꾼다.
+ */
+function useShareOrigin(open: boolean) {
+  const [state, setState] = useState<{ origin: string; swapped: boolean; noLan: boolean }>({ origin: "", swapped: false, noLan: false });
+  useEffect(() => {
+    if (!open) return;
+    const { origin, hostname, port, protocol } = window.location;
+    if (!LOCAL_HOSTS.has(hostname)) {
+      setState({ origin, swapped: false, noLan: false });
+      return;
+    }
+    setState({ origin, swapped: false, noLan: false });
+    fetch("/api/host")
+      .then((r) => r.json() as Promise<{ lan: string[] }>)
+      .then(({ lan }) => {
+        if (lan[0]) setState({ origin: `${protocol}//${lan[0]}${port ? `:${port}` : ""}`, swapped: true, noLan: false });
+        else setState({ origin, swapped: false, noLan: true });
+      })
+      .catch(() => setState({ origin, swapped: false, noLan: true }));
+  }, [open]);
+  return state;
+}
+
 export function ShareDialog({ open, onClose, roomId, controllerKey }: { open: boolean; onClose: () => void; roomId: string; controllerKey: string }) {
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  const { origin, swapped, noLan } = useShareOrigin(open);
   const k = `?key=${controllerKey}`;
   const links: LinkDef[] = [
     {
@@ -58,6 +85,16 @@ export function ShareDialog({ open, onClose, roomId, controllerKey }: { open: bo
           }
         />
       </p>
+      {swapped && (
+        <p className="mb-3 rounded-lg bg-panel-2 px-3 py-2 text-xs text-subtext">
+          이 화면을 <b>localhost</b>로 열어서, 다른 기기가 들어올 수 있게 링크와 QR을 사내망 주소 <b className="font-mono">{origin}</b>로 바꿨어요.
+        </p>
+      )}
+      {noLan && (
+        <p className="mb-3 rounded-lg bg-danger/10 px-3 py-2 text-xs text-danger-ink">
+          이 화면을 <b>localhost</b>로 열었는데 사내망 주소를 찾지 못했어요. 이 링크는 다른 기기에서 열리지 않아요. Wi‑Fi 연결을 확인해 주세요.
+        </p>
+      )}
       <div className="grid gap-3 sm:grid-cols-2">
         {links.map((l) => (
           <LinkCard key={l.path} link={l} url={`${origin}${l.path}`} />

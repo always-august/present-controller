@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRoomStore } from "../store/room";
 
 /** 방을 찾지 못했거나 아직 상태를 못 받은 경우의 공통 처리 */
@@ -24,6 +25,7 @@ export function RoomGate({ children, requireController = false }: { children: Re
     return (
       <Center>
         <p className="text-sm text-muted">{everConnected ? "상태 불러오는 중…" : "연결 중…"}</p>
+        <SlowHint />
       </Center>
     );
   }
@@ -41,6 +43,29 @@ export function RoomGate({ children, requireController = false }: { children: Re
     );
   }
   return <>{children}</>;
+}
+
+/** 연결이 8초 넘게 안 되면 흔한 원인을 보여준다 */
+function SlowHint() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setShow(true), 8000);
+    return () => clearTimeout(id);
+  }, []);
+  if (!show) return null;
+  const host = typeof window === "undefined" ? "" : window.location.host;
+  return (
+    <div className="mt-6 max-w-sm rounded-xl border border-line bg-panel-2 p-4 text-left text-xs leading-relaxed text-subtext">
+      <p className="mb-2 font-semibold text-ink">연결이 안 되고 있어요</p>
+      <ul className="list-disc space-y-1 pl-4">
+        <li>서버가 켜진 컴퓨터와 같은 Wi‑Fi에 연결돼 있는지 확인해 주세요. 게스트 Wi‑Fi는 따로 분리돼 있을 수 있어요.</li>
+        <li>
+          지금 주소는 <span className="font-mono">{host}</span>예요. 다른 기기에서 열었는데 <span className="font-mono">localhost</span>라면 서버 컴퓨터의 IP 주소로 다시 열어 주세요.
+        </li>
+        <li>서버 컴퓨터가 잠자기에 들어가지 않았는지 확인해 주세요.</li>
+      </ul>
+    </div>
+  );
 }
 
 function Center({ children }: { children: React.ReactNode }) {

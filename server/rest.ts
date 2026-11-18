@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { networkInterfaces } from "node:os";
 import type { MessageColor } from "../shared/types";
 import type { RoomEngine } from "./engine";
 import { clientIp, RateLimiter } from "./rateLimit";
@@ -33,6 +34,17 @@ export function createRestHandler(store: RoomStore, engine: RoomEngine) {
     }
 
     const parts = url.pathname.split("/").filter(Boolean); // ["api", "rooms", id, action, ...]
+
+    // GET /api/host: 이 서버의 사내망 IPv4 주소. 어드민을 localhost로 열었을 때 QR을 사내망 주소로 바꾸는 데 쓴다
+    if (parts[1] === "host" && req.method === "GET") {
+      const lan = Object.values(networkInterfaces())
+        .flat()
+        .filter((i) => i && i.family === "IPv4" && !i.internal)
+        .map((i) => i!.address);
+      json(200, { lan, port: Number(process.env.PORT ?? 3000) });
+      return true;
+    }
+
     if (parts[1] !== "rooms") {
       json(404, { error: "not found" });
       return true;
